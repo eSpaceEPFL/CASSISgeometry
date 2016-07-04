@@ -40,7 +40,8 @@ References
    5. ``Colour and Stereo Surface Imaging System - CaSSIS,'' experiment
       overview: http://www.cassis.unibe.ch/instrument/experiment_overview
    
-   
+   6. ``A Rational Function Lens Distortion Model for General Cameras'', 
+      David Claus and Andrew W.Fitzgibbon, CVPR 2005 
 
 Contact Information
 -------------------------------------------------------------------------------
@@ -422,8 +423,25 @@ FOV Definition
 Optical Distortion
 --------------------------------------------------------
 
-   Optical d
+   As lens distortion model we use Rational function (RF) model [6]. RF model 
+   represent ideals (undistorted) image coordinates (x, y) as ratio of 2-d 
+   order polynomials of real (distorted) image coordinates (i, j).
 
+       A1[1] * i^2 + A1[2] * i * j + A1[3] * j^2 + A1[4] * i + A1[5] * j + A1[6]
+   x = ------------------------------------------------------------------------
+       A3[1] * i^2 + A3[2] * i * j + A3[3] * j^2 + A3[4] * i + A3[5] * j + 1
+
+       A2[1] * i^2 + A2[2] * i * j + A2[3] * j^2 + A2[4] * i + A2[5] * j + A2[6]
+   x = ------------------------------------------------------------------------
+       A3[1] * i^2 + A3[2] * i * j + A3[3] * j^2 + A3[4] * i + A3[5] * j + 1
+
+   \begindata
+   	
+   		INS-143400_LENS_DISTRTION_A1 = ( -0.0015, -0.1134, -0.0000,  0.9999,  0.0000, 0.0000)
+   		INS-143400_LENS_DISTRTION_A2 = ( -0.0030, -0.0015, -0.1133,  0.0000,  0.9949, 0.0000)
+   		INS-143400_LENS_DISTRTION_A3 = ( -0.0321, -0.0001, -0.0320, -0.0015, -0.0866 )
+
+   \endtext
 
 Platform ID
 ---------------------------------------------------------------------------
