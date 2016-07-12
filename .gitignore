@@ -27,3 +27,6 @@
 *.exe
 *.out
 *.app
+
+# Reserve copies of files
+*.*~
