@@ -4,7 +4,7 @@ clc; clear all;
 
 % Set path to dataset provided by UniBern and name of subset
 dataset_path = '/HDD1/Data/CASSIS/2015_06_23_CASSIS_STARFIELD';
-set = cassis_starfield_dataset(dataset_path, 'pointing_spacecraft');
+set = cassis_starfield_dataset(dataset_path, 'pointing_cassis');
 frames = cassis_find_images(set.level0);
 nb_images = length(frames.time);
 mult = (2^16-1)/(2^14-1); % 14bit images in 16bit

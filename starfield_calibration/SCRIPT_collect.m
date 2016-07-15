@@ -1,4 +1,4 @@
-% Given setnames script collects all matched stars in one large file.
+% Given setnames script collects all matched stars in one file.
 % It eliminates data points that are two close in image space.
 % It also eliminates images that does not contain sufficient datapoins
 
@@ -8,10 +8,9 @@ clear all; clc;
 subsetnames = {'commissioning_2'};
 dataset_path = '/HDD1/Data/CASSIS/2015_06_23_CASSIS_STARFIELD';
 min_points_per_image = 5;
-min_dist_btw_points = 5;
+min_dist_btw_points = 15;
 
 collect_ra_dec_x_y_time = [];
-
 for nsubset = 1:length(subsetnames)
 
     set = cassis_starfield_dataset(dataset_path, subsetnames{nsubset});
@@ -37,11 +36,14 @@ for nsubset = 1:length(subsetnames)
             end
                     
             % if there are enought points add 
-            if( length(ra_dec_x_y) >= min_points_per_image )
+            nb_points = size(ra_dec_x_y,1);
+            if( nb_points >= min_points_per_image )
                 
                 % add time
                 time_num = cassis_time2num(frames.time{nimage});
-                collect_ra_dec_x_y_time = [collect_ra_dec_x_y_time; [ra_dec_x_y repmat(time_num, size(ra_dec_x_y, 1), 1)]];
+                ra_dec_x_y_time = [ra_dec_x_y repmat(time_num, size(ra_dec_x_y, 1), 1)];
+                
+                collect_ra_dec_x_y_time = [collect_ra_dec_x_y_time; ra_dec_x_y_time];
                 fprintf(' %i stars added', length(ra_dec_x_y));
             end
         end
@@ -52,8 +54,8 @@ end
 figure;
 scatter(collect_ra_dec_x_y_time(:,3), collect_ra_dec_x_y_time(:,4), [],collect_ra_dec_x_y_time(:,5));
 
-% save
-csvwrite('collect_ra_dec_x_y_time.csv', collect_ra_dec_x_y_time);
+% save 
+dlmwrite('collect_ra_dec_x_y_time.csv', collect_ra_dec_x_y_time, 'delimiter', ',', 'precision', 20);
 fprintf('In total: %i stars\n', length(collect_ra_dec_x_y_time));
 
 

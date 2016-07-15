@@ -7,8 +7,10 @@ function set = cassis_starfield_dataset(dataset_path, subset_name)
         subsetpath = [dataset_path '/COM/160407_commissioning_2'];
     elseif( strcmp('pointing_spacecraft', subset_name) )
         subsetpath = [dataset_path '/COM/160412_pointing_spacecraft'];
-    elseif( strcmp('pointing_spacecraft', subset_name) )
-        subsetpath = [dataset_path '/COM/160412_pointing_spacecraft'];
+    elseif( strcmp('pointing_cassis', subset_name) )
+        subsetpath = [dataset_path '/COM/160413_pointing_cassis'];
+    elseif( strcmp('interference', subset_name) )
+        subsetpath = [dataset_path '/COM/160418_interference'];
     else
         error('No set with such name');
     end
