@@ -30,3 +30,6 @@
 
 # Reserve copies of files
 *.*~
+
+# Temporal folders
+starfield_calibration/tmp

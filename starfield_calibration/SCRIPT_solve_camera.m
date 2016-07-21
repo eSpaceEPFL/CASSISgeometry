@@ -33,7 +33,7 @@ test_nb_points = size(test_xy_field, 1);
 %% Initial guesses (and boundaries)
 
 % focal length (if you want to optimize fx and fy you can put two numbers)
-f0 = [(880e-3) / 10e-6]; 
+f0 = [(880e-3) / 10e-6 (880e-3) / 10e-6]; 
 f_lb = f0 - (50e-3) / 10e-6; % -/+50 mm focal length    
 f_ub = f0 + (50e-3) / 10e-6; 
 % principal point
