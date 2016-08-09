@@ -4,11 +4,14 @@
 
 clear all; clc;
 
-% Parameters
+% input parameters
 subsetnames = {'commissioning_2'};
 dataset_path = '/HDD1/Data/CASSIS/2015_06_23_CASSIS_STARFIELD';
 min_points_per_image = 5;
 min_dist_btw_points = 15;
+
+% output 
+all_data_fname = 'DATA_all_data_ra_dec_x_y_time.csv'
 
 collect_ra_dec_x_y_time = [];
 for nsubset = 1:length(subsetnames)
@@ -55,7 +58,10 @@ figure;
 scatter(collect_ra_dec_x_y_time(:,3), collect_ra_dec_x_y_time(:,4), [],collect_ra_dec_x_y_time(:,5));
 
 % save 
-dlmwrite('collect_ra_dec_x_y_time.csv', collect_ra_dec_x_y_time, 'delimiter', ',', 'precision', 20);
+fid = fopen(all_data_fname, 'w');
+fprintf(fid, '%% ra [deg], dec [deg], x [px], y[px], time [days from 0 year]\n');
+fclose(fid);
+dlmwrite(all_data_fname, collect_ra_dec_x_y_time, '-append', 'delimiter', ',', 'precision', 20);
 fprintf('In total: %i stars\n', length(collect_ra_dec_x_y_time));
 
 

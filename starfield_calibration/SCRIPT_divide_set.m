@@ -1,10 +1,15 @@
 % Script divides all point in test and training set
 clear all; clc;
 
+% input params
 prc_test = 0.2;
-match_table_fname = 'collect_ra_dec_x_y_time.csv';
+all_data_fname= 'DATA_all_data_ra_dec_x_y_time.csv';
 
-ra_dec_x_y_time = csvread(match_table_fname);
+% output params
+test_set_fname = 'DATA_test_set_ra_dec_x_y_time.csv';
+train_set_fname = 'DATA_train_set_ra_dec_x_y_time.csv';
+
+ra_dec_x_y_time = dlmread(all_data_fname,',',1,0);
 nb_points = size(ra_dec_x_y_time, 1);
 
 %% Make test and training set
@@ -28,5 +33,15 @@ end
 
 fprintf('Test set contains %i points\n', size(test_ra_dec_x_y_time,1));
 fprintf('Training set contains %i points\n', size(train_ra_dec_x_y_time,1));
-dlmwrite('test_ra_dec_x_y_time.csv', test_ra_dec_x_y_time, 'delimiter', ',', 'precision', 20);
-dlmwrite('train_ra_dec_x_y_time.csv', train_ra_dec_x_y_time, 'delimiter', ',', 'precision', 20);
+
+% save training set
+fid = fopen(train_set_fname, 'w');
+fprintf(fid, '%% ra [deg], dec [deg], x [px], y[px], time [days from 0 year]\n');
+fclose(fid);
+dlmwrite(train_set_fname, train_ra_dec_x_y_time, '-append', 'delimiter', ',', 'precision', 20);
+
+% save test set 
+fid = fopen(test_set_fname, 'w');
+fprintf(fid, '%% ra [deg], dec [deg], x [px], y[px], time [days from 0 year]\n');
+fclose(fid);
+dlmwrite(test_set_fname, test_ra_dec_x_y_time, '-append', 'delimiter', ',', 'precision', 20);

@@ -1,4 +1,4 @@
-function err = cost(sol, XYZ_index, xy_field, imageIdx, nb_times)
+function err = solve_camera_cost(sol, XYZ_index, xy_field, imageIdx, nb_times)
     
     nb_points = size(XYZ_index,1);
     

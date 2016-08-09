@@ -2,11 +2,16 @@
 
 clear all; clc;
 
-train_table_fname = 'train_ra_dec_x_y_time.csv';
-test_table_fname = 'test_ra_dec_x_y_time.csv';
+% input
+train_table_fname = 'DATA_train_set_ra_dec_x_y_time.csv';
+test_table_fname = 'DATA_test_set_ra_dec_x_y_time.csv';
 
-train_ra_dec_x_y_time = csvread(train_table_fname);
-test_ra_dec_x_y_time = csvread(test_table_fname);
+% output
+intrinsics_fname = 'DATA_intrinsics_f_x0_y0.csv'
+extrinsics_fname = 'DATA_extrinsics_rotx_roty_rotz_time.csv';
+ 
+train_ra_dec_x_y_time = csvread(train_table_fname,1,0);
+test_ra_dec_x_y_time = csvread(test_table_fname,1,0);
 
 [train_unique_times, ~, train_imageIdx] = unique(train_ra_dec_x_y_time(:,5));
 nb_images = length(train_unique_times);
@@ -33,7 +38,7 @@ test_nb_points = size(test_xy_field, 1);
 %% Initial guesses (and boundaries)
 
 % focal length (if you want to optimize fx and fy you can put two numbers)
-f0 = [(880e-3) / 10e-6 (880e-3) / 10e-6]; 
+f0 = [(880e-3) / 10e-6]; 
 f_lb = f0 - (50e-3) / 10e-6; % -/+50 mm focal length    
 f_ub = f0 + (50e-3) / 10e-6; 
 % principal point
@@ -67,18 +72,29 @@ options = optimoptions('lsqnonlin', 'Algorithm', 'trust-region-reflective', 'Dis
 [f, x0, y0, angles] =  vec2_f_x0_y0_angles(sol, nb_images);
 K = f_x0_y0_2K(f, x0, y0);
 
-angles
-K
+%% Save solution 
 
+% save extirinsics (rotation)
+fid = fopen(extrinsics_fname, 'w');
+fprintf(fid, '%% rotation x [rad], rotation y [rad], rotation x [rad], time [sec]\n');
+fclose(fid);
+dlmwrite(extrinsics_fname, [angles' train_unique_times], '-append','delimiter',',', 'precision', 20);
+
+% save camera intrinsics
+fid = fopen(intrinsics_fname, 'w');
+fprintf(fid, '%% f [], x0[px], y0[px]\n');
+fclose(fid);
+dlmwrite(intrinsics_fname, [f(1), x0, y0], '-append','delimiter',',', 'precision', 20);
+
+% display training results
 fprintf('Train set size %i [points]\n', train_nb_points);
 fprintf('Average training residual %0.3f [pix]\n', mean(train_res));
 
-%% Testing
-
+% display test tesults
 test_res = cost(sol, test_XYZ_index, test_xy_field, test_imageIdx, nb_images);
-
 fprintf('Test set size %i [points]\n', test_nb_points);
 fprintf('Average test residual %0.3f [pix]\n', mean(test_res));
+
 
 
 
