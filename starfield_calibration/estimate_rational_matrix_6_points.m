@@ -1,4 +1,4 @@
-function [A_rational, A_rational_mat] = estimate_rational_matrix_6_points(xy_norm, chi6D_ij_norm)
+function [A_vec, A, res] = estimate_rational_matrix_6_points(xy_norm, chi6D_ij_norm)
     % Estimate rational transformation A between normalized points coordinate
     % in ideal image xy_norm and converted to 6D normalized points coordinates in
     % distorted image chi6D_ij_norm
@@ -76,8 +76,7 @@ function [A_rational, A_rational_mat] = estimate_rational_matrix_6_points(xy_nor
           -repmat(xy_norm_scaled(:,2),1,6).*chi6D_ij_norm_scaled  repmat(xy_norm_scaled(:,1),1,6).*chi6D_ij_norm_scaled,  0 * chi6D_ij_norm_scaled];   
     
     f = svd_homogeneous_solver(A);  
-   % f = lse_homogeneous_solver(A,18);  
-   A_rational_scaled = [f(1:6)'; f(7:12)'; f(13:end)'];  
+    A_rational_scaled = [f(1:6)'; f(7:12)'; f(13:end)'];  
               
     % descaling
     % X = A*chi6D
@@ -85,7 +84,15 @@ function [A_rational, A_rational_mat] = estimate_rational_matrix_6_points(xy_nor
     % (Tx*X) = ( Tx*A*inv(Tchi6D) ) * (Tchi6D*chi6D)
     % A_scaled = Tx*A*inv(Tchi6D)
     % A = inv(Tx)*A_scaled*Tchi6D
-    A_rational_mat = inv(Txy)*A_rational_scaled*Tchi6D;
-    A_rational = [A_rational_mat(1,:)'; A_rational_mat(2,:)'; A_rational_mat(3,:)'];    
+    A = inv(Txy)*A_rational_scaled*Tchi6D;
+    A = A./A(end);
+    A_vec = [A(1,:)'; A(2,:)'; A(3,:)'];
+    
+    % compute average residual error
+    xyz_predicted = chi6D_ij_norm*A';
+    xy_predicted(:,1) = xyz_predicted(:,1)./xyz_predicted(:,3);
+    xy_predicted(:,2) = xyz_predicted(:,2)./xyz_predicted(:,3);
+    res = sqrt(sum((xy_predicted  - xy_norm).^2, 2)); 
+
 end
     
