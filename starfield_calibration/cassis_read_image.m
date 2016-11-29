@@ -1,4 +1,4 @@
-function [I, mask] = cassis_read_image(path, time)
+function [I, mask, exposure] = cassis_read_image(path, time)
 
 %clear all;
 %path = '/HDD1/Data/CASSIS/2014_05_26_TGO_STARFIELD/160407_commissioning_2/level0';
@@ -26,6 +26,8 @@ for nfile = 1:nb_files
     win_row_end     = 1 + str2num(xml.Product_Observational.CaSSIS_Header.PEHK_HEADER.Attributes.(sprintf('Window%i_End_Row',win_idx)));
     win_col_start   = 1 + str2num(xml.Product_Observational.CaSSIS_Header.PEHK_HEADER.Attributes.(sprintf('Window%i_Start_Col',win_idx)));
     win_col_end     = 1 + str2num(xml.Product_Observational.CaSSIS_Header.PEHK_HEADER.Attributes.(sprintf('Window%i_End_Col',win_idx)));
+    
+    exposure = str2num(xml.Product_Observational.CaSSIS_Header.PEHK_HEADER.Attributes.Exposure_Time);
     
     % Read data stripe
     dat_fname = [xml_fname(1:end-4) '.dat'];
