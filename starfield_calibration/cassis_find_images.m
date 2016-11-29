@@ -8,8 +8,7 @@ nb_files = length(xml_files);
 
 cnt = 0;
 
-frames.time = {};
-frames.exp = [];
+frames = {};
 for nfile = 1:nb_files
 
     fname = xml_files(nfile).name;
@@ -20,10 +19,9 @@ for nfile = 1:nb_files
         time = [substr{3} '-' substr{4} '-' substr{5}];
         exp = str2num(substr{7}(end-2:end));
         
-        if( ~ismember(time, frames.time) ) % check if this is part of previously observed frame 
+        if( ~ismember(time, frames) ) % check if this is part of previously observed frame 
             cnt = cnt + 1;
-            frames.time{cnt} = time;
-            frames.exp(cnt) = exp;
+            frames{cnt} = time;
         end
     end
     

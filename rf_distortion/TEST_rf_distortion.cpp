@@ -9,9 +9,9 @@ using namespace std;
 
 int main()
 {
-   float A1_row[6] = {-0.0018, -0.1367, -0.0000,  0.9999,  0.0000, 0.0000};
-   float A2_row[6] = {-0.0036, -0.0018, -0.1366,  0.0000,  0.9949, 0.0000};
-   float A3_row[5] = {-0.0467, -0.0001, -0.0466, -0.0018, -0.1044 };
+   float A1_row[6] = {-0.6106, -0.5445, -0.0015, 0.9998, 0.0002, 0};
+   float A2_row[6] = {-0.0049, -0.607, -0.5433, -0.0005, 0.9943, 0.0005};
+   float A3_row[6] = {-0.0496, -0.0257, -0.0703, -0.6092, -0.5101, 1};
    float width = 2048;
    float height = 2048;
 
@@ -41,7 +41,7 @@ int main()
         rf_denormalize_point(x_, y_, x_norm, y_norm, width, height);
 
         float err = sqrt((x-x_)*(x-x_) + (y-y_)*(y-y_));
-        fprintf(f, "%3.5f %3.5f %3.5f %3.5f\n", (float)x, (float)y, i-x, j-y);
+        fprintf(f, "%3.5f %3.5f %3.5f %3.5f\n", (float)i, (float)j, x_-i, y_-j);
         if (err > max_err) max_err = err;
         mean_err += err;
         cnt++;
