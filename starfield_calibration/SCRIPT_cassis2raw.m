@@ -8,8 +8,8 @@ function SCRIPT_cassis2raw()
 
 % ------------------------------------------------------------------------
 
-dataset_path = '/HDD1/Data/CASSIS/2015_06_23_CASSIS_STARFIELD';
-dataset_name = 'commissioning_2';
+dataset_path = '/HDD1/Data/CASSIS/2016_09_20_CASSIS_STARFIELD';
+dataset_name = 'mcc_motor';
 
 % ------------------------------------------------------------------------ 
 

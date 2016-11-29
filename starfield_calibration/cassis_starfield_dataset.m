@@ -10,6 +10,12 @@ function set = cassis_starfield_dataset(dataset_path, subset_name)
     elseif( strcmp('pointing_cassis', subset_name) )
         subsetpath = [dataset_path '/COM/160413_pointing_cassis'];
         set.ignorelist = {};
+    elseif( strcmp('mcc_abs_cal', subset_name) )
+        subsetpath = [dataset_path '/cr1/160613_mcc_abs_cal'];
+        set.ignorelist = {};
+    elseif( strcmp('mcc_motor', subset_name) )
+        subsetpath = [dataset_path '/cr1/160614_mcc_motor'];
+        set.ignorelist = {};
     else
         error('No set with such name');
     end
@@ -25,14 +31,17 @@ function set = cassis_starfield_dataset(dataset_path, subset_name)
     
     % combined frames
     set.raw = [subsetpath '/OUT_raw'];
+    mkdir(subsetpath, 'OUT_raw')
     
     % darkframes
     set.denoise = [subsetpath '/OUT_denoise'];
-      
+    mkdir(subsetpath, 'OUT_denoise')
+    
     % recognized stars
     set.recognize = [subsetpath '/OUT_recognize'];
+    mkdir(subsetpath, 'OUT_recognize')
     
     % spice meta kernel
     set.spice = [subsetpath '/casssoft/SPICE/meta.tm'];
-    
+
 end

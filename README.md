@@ -8,7 +8,7 @@ Contatins collection of scripts that perform geometric calibration using starfie
 Contains C++ function for distortion / undistortion of CaSSIS images
 
 ## /ik
-Contains current SPICE Instrument Kernel for CaSSIS  
+Contains current SPICE Instrument Kernel for CaSSIS with CaSSIS lens distortion model. 
 
-## /documentation
-Contains all relevant calibration reports
+## /docs
+Contains all calibration reports and relevant papers.

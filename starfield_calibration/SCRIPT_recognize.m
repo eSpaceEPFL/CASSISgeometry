@@ -4,13 +4,19 @@ function SCRIPT_recognize()
 
 % ------------------------------------------------------------------------
 
-dataset_path = '/HDD1/Data/CASSIS/2015_06_23_CASSIS_STARFIELD';
-dataset_name = 'commissioning_2';
+%dataset_path = '/HDD1/Data/CASSIS/2015_06_23_CASSIS_STARFIELD';
+%dataset_name = 'commissioning_2';
+
+dataset_path = '/HDD1/Data/CASSIS/2016_09_20_CASSIS_STARFIELD';
+dataset_name = 'mcc_abs_cal';
+
+%dataset_path = '/HDD1/Data/CASSIS/2016_09_20_CASSIS_STARFIELD';
+%dataset_name = 'mcc_motor';
 
 % ------------------------------------------------------------------------     
 
 set = cassis_starfield_dataset(dataset_path, dataset_name);
-activelist = readtable(set.activelist);
+activelist = readtable(set.imglist);
 activelist = table2struct(activelist);
 nb_images = length(activelist);
 
