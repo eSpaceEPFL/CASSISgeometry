@@ -426,7 +426,7 @@ Optical Distortion
 --------------------------------------------------------
 
    As lens distortion model we use Rational function (RF) model [6]. RF model 
-   represent ideals (undistorted) image coordinates (x, y) as ratio of 2-d 
+   represent ideal (undistorted) image coordinates (x, y) as ratio of 2-d 
    order polynomials of real (distorted) image coordinates (i, j).
 
        A1[1] * i^2 + A1[2] * i * j + A1[3] * j^2 + A1[4] * i + A1[5] * j + A1[6]
@@ -437,13 +437,13 @@ Optical Distortion
    y = ------------------------------------------------------------------------
        A3[1] * i^2 + A3[2] * i * j + A3[3] * j^2 + A3[4] * i + A3[5] * j + A3[6]
 
-   Note, that A3[5] element is always equal to 1 (to eliminate redundancy).
+   Note, that A3[6] element is always equal to 1 (to eliminate redundancy).
 
    \begindata
    	
-    	INS-143400_LENS_DISTRTION_A1 = ( -0.6106, -0.5445, -0.0015,  0.9998,  0.0002, 0.0000)
-   		INS-143400_LENS_DISTRTION_A2 = ( -0.0049, -0.6070, -0.5433, -0.0005,  0.9943, 0.0005)
-   		INS-143400_LENS_DISTRTION_A3 = ( -0.0496, -0.0257, -0.0703, -0.6092, -0.5101, 1.0000)
+    INS-143400_LENS_DISTRTION_A1 = ( -0.6106, -0.5445, -0.0015,  0.9998,  0.0002, 0.0000)
+    INS-143400_LENS_DISTRTION_A2 = ( -0.0049, -0.6070, -0.5433, -0.0005,  0.9943, 0.0005)
+    INS-143400_LENS_DISTRTION_A3 = ( -0.0496, -0.0257, -0.0703, -0.6092, -0.5101, 1.0000)
 
    \endtext
 
