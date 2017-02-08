@@ -1,7 +1,7 @@
 # CASSISgeometry
 Repository to store code and data relevent to the TGO CASSIS investigation 
 
-## /starfield_calibration
+## /calibration
 Contatins collection of scripts that perform geometric calibration using starfield images.
 
 ## /rf_distortion
