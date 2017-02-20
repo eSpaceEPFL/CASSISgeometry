@@ -1,15 +1,15 @@
 % Given table of matched stars and initial extrinsic and intrinsic
 % SCRIPT refines extrinsic and intrinsics using multiple images.
 
-function SCRIPT_bundle_adjustment()
+function nb_outliers = SCRIPT_bundle_adjustment(dataset_name )
 
  %%
 
 dataset_path = '/home/tulyakov/Desktop/espace-server';
-dataset_name = 'mcc_motor';
+%dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
 zscore_th = 3; 
-neighb = 200;
+neighb = 50;
 
 %%
 clc
@@ -31,7 +31,7 @@ pixSize = intrinsic0.pixSize;
 f = intrinsic0.f;
 
 % read extirinsic
-extrinsic0 = readtable(set.extrinsic0);
+extrinsic0 = readtable(set.extrinsic0_local);
 nb_exp = height(extrinsic0);
 
 % fill initial quaternions

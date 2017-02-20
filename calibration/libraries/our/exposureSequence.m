@@ -272,6 +272,20 @@ classdef exposureSequence
 %       
 %       end
 %    
+      
+      function framelet = getFramelet(obj, nsubexp, nexp)
+         
+          framelet = obj.framelet{nsubexp}(:,:,nexp);
+          
+          if( correct_on ) 
+            % correct distortion
+              
+          end
+              
+          return framelet;
+          
+      end
+      
          
       function [image_pano, Rgeo, Rmap, raw_pano, mask_pano] = getImage(obj, nsubexp)
                 

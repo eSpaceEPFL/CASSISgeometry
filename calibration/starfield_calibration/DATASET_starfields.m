@@ -1,7 +1,10 @@
 function set = DATASET_starfields(dataset_path, subset_name)
 
+    set.name = subset_name;
+        
     % Function returns all folder pertained to CaSSIS starfield dataset
-	
+	 warning ('off','all'); % to prevent warnings on folder creation
+    
 	if( strcmp('commissioning_1', subset_name) )
         
         subsetpath = [dataset_path '/CASSIS/cruise/160407_commissioning_1'];
@@ -30,10 +33,14 @@ function set = DATASET_starfields(dataset_path, subset_name)
    
         subsetpath = [dataset_path '/CASSIS/aerobraking/161124_stellar_cal_orbit10'];
    
-     elseif( strcmp('stellar_cal_orbit09', subset_name) )
+    elseif( strcmp('stellar_cal_orbit09', subset_name) )
    
         subsetpath = [dataset_path '/CASSIS/aerobraking/161120_stellar_cal_orbit09'];
-       
+    
+    elseif( strcmp('mcc_motor_pointing_cassis', subset_name) )
+   
+        subsetpath = [dataset_path '/CASSIS/tests/mcc_motor_pointing_cassis'];
+        
     else
         error('No set with such name');
     end
@@ -52,29 +59,43 @@ function set = DATASET_starfields(dataset_path, subset_name)
         
     % ----------- output --------------
     
+    mkdir(subsetpath,  'OUTPUT');
+        
     % combined frames
     set.sequences = [subsetpath '/OUTPUT/sequences'];
+    mkdir([subsetpath '/OUTPUT/'], 'sequences');
     
     % combined frames
     set.raw_exposures = [subsetpath '/OUTPUT/raw_exposures'];
+    mkdir([subsetpath '/OUTPUT/'], 'raw_exposures');
     
     % denoising
     set.denoise_exposure = [subsetpath '/OUTPUT/denoise_exposures'];
+    mkdir([subsetpath '/OUTPUT/'],  'denoise_exposures');
     
     % recognized stars
     set.recognize = [subsetpath '/OUTPUT/recognize']; 
-    
+    mkdir([subsetpath '/OUTPUT/'], 'recognize');
     
     % ----------- summaries -------------
 
     % factory parameters
     set.intrinsic0 = [subsetpath '/OUTPUT/intrinsic0.csv'];
     set.lensDistortion0 = [subsetpath '/OUTPUT/lensDistortion0.csv'];
-    set.extrinsic0 = [subsetpath '/OUTPUT/extrinsic0.csv'];
+    set.extrinsic0_spice = [subsetpath '/OUTPUT/extrinsic0_spice.csv'];
     
+    % individual rotation angle tuning
+    set.extrinsic0_local = [subsetpath '/OUTPUT/extrinsic0_local.csv'];
+        
     % BA parameters
     set.extrinsic_ba = [subsetpath '/OUTPUT/extrinsic_ba.csv'];
     set.intrinsic_ba = [subsetpath '/OUTPUT/intrinsic_ba.csv'];
+    
+    % commanded rotation
+    set.sysRotErr = [subsetpath '/OUTPUT/sysRotErr.csv'];
+    
+    % commanded rotation
+    set.rotCommand = [subsetpath '/OUTPUT/rotCommand.csv'];
     
     % lens distortion estimation
     set.lensDistortion = [subsetpath '/OUTPUT/lensDistortion.csv'];
@@ -93,4 +114,6 @@ function set = DATASET_starfields(dataset_path, subset_name)
 
     % star filtering (using brightness, 
     set.inlierStarSummary = [subsetpath '/OUTPUT/inlierStarSummary.csv']; 
+    
+     warning ('on','all');
 end

@@ -1,9 +1,9 @@
-function SCRIPT_init_intrinsic()
+function SCRIPT_init_intrinsic(dataset_name)
 
  %%
 
 dataset_path = '/home/tulyakov/Desktop/espace-server';
-dataset_name = 'mcc_motor';
+%dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
 
 %%

@@ -1,13 +1,12 @@
 % Given star matches, camera intrinsics and extrinsics SCRIPT estimates rational
 % distortion model.
 
-function SCRIPT_solve_distortion()
+function SCRIPT_solve_distortion(dataset_name)
 
-
- %%
+%%
 
 dataset_path = '/home/tulyakov/Desktop/espace-server';
-dataset_name = 'mcc_motor';
+%dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
 image_size = [2048 2048];
 
@@ -85,7 +84,7 @@ avgErr0 = mean(sqrt(sum(reshape(res0*sum(image_size), nb_points, 2).^2,2)));
 avgErr = mean(err);
 
 fprintf('Average error before distortion estimation %d \n', avgErr0);
-fprintf('Average error after before distortion estimation %d \n', avgErr);
+fprintf('Average error after distortion estimation %d \n', avgErr);
 
 % save distortion matrix
 lensDistortion = table(A);

@@ -1,12 +1,13 @@
-function SCRIPT_collect_star()
+function SCRIPT_collect_star(dataset_name)
 
  %%
 
 dataset_path = '/home/tulyakov/Desktop/espace-server';
-dataset_name = 'mcc_motor';
+%dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
 
 %%
+clc
 fprintf('Initializing rotation from SPICE kernel\n');
 
 % read folders structure

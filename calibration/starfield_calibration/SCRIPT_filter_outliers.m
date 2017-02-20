@@ -3,13 +3,13 @@
 % several consequtive frames. SCRIPT also eliminates frames that do not have 
 % enougth stars.
 
-function SCRIPT_filter_outliers()
+function SCRIPT_filter_outliers(dataset_name)
 
 
  %%
 
 dataset_path = '/home/tulyakov/Desktop/espace-server';
-dataset_name = 'mcc_motor';
+%dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
 
 time_th = 30e-4; % 30 sec 
@@ -19,6 +19,7 @@ min_points_per_image = 10;
 flux_th = 3000;
 
 %%
+clc
 fprintf('Starting outliers detection procedure: \n');
 
 % read folders structure

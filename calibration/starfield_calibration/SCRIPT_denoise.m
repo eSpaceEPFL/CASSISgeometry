@@ -1,17 +1,17 @@
 % Script flattens images, substracts dark field, masks out problems
 
-%function SCRIPT_denoise()
+function SCRIPT_denoise(dataset_name)
 
 %%
-clear all;
 dataset_path = '/home/tulyakov/Desktop/espace-server';
-dataset_name = 'mcc_motor';
+%dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
 lowSigmaDOG  = 7;
 highSigmaDOG = 1;
 gamma = 0.9;
 
 %%
+clc
 fprintf('Substracting dark frame and DOG filtering\n');
 
 % read folders structure
@@ -44,19 +44,22 @@ for nexp = 1:nb_exp
     % substract dark frame
     I = im2double(imread([set.raw_exposures '/' expSummary.fname_exp{nexp}]));
     mask = im2double(imread([set.raw_exposures '/' expSummary.fname_mask{nexp}]));
-    I = max(I - Idark(:,:,ind),0).*mask;
+    mask = imerode(mask,ones(21));
+    I = max(I - Idark(:,:,ind),0);
         
     % DOG
     filter = fspecial('gaussian', [21, 21], highSigmaDOG) - fspecial('gaussian', [21, 21], lowSigmaDOG);
     I = (max(imfilter(I,filter),0)).^gamma;
     I = (I - min(I(:))) / range(I(:));
+    I = I.*mask;
+    I = imadjust(I,[0.05 1]);
     
     % save
     fname = [set.denoise_exposure '/' expSummary.fname_exp{nexp}];
     imwrite(uint16(I*2^16),fname); 
    
     % save visualization
-    figure(f); imshow(I);    
+    figure(f); imshow(I*10);    
     %pause(0.1);
 end
 

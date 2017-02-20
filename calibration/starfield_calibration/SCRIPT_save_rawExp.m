@@ -1,15 +1,15 @@
 % Script flattens images, substracts dark field, masks out problems
 
-function SCRIPT_save_rawExp()
+function SCRIPT_save_rawExp(dataset_name)
 
 %% params and dependencies
 
 dataset_path = '/home/tulyakov/Desktop/espace-server';
-dataset_name = 'mcc_motor';
+%dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
 mult = 1/(2^16-1); % 14bit images in 16bit
 islevel0 = true;
-skipFirst = 2;
+skipFirst = 1;
 
 %%
 
@@ -29,7 +29,7 @@ nb_seq = height(seqSummary);
 f = figure;
 
 i = 1;
-for nseq = 1:nb_seq
+for nseq = 1:30%nb_seq
     
     fprintf('Starting %i sequence \n', nseq);
     
