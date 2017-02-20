@@ -1,7 +1,7 @@
-function SCRIPT_init_extrinsic_local(dataset_name)
+function SCRIPT_init_extrinsic_local(set)
  %%
 
-dataset_path = '/home/tulyakov/Desktop/espace-server';
+%dataset_path = '/home/tulyakov/Desktop/espace-server';
 %dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
 
@@ -10,7 +10,7 @@ clc
 fprintf('Improving rotation for each image individually, while keeping focal length fixed\n');
 
 % read folders structure
-set = DATASET_starfields(dataset_path, dataset_name);
+%set = DATASET_starfields(dataset_path, dataset_name);
 
 % read stars 
 inlierStarSummary = readtable(set.inlierStarSummary);

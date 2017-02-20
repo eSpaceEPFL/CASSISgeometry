@@ -1,37 +1,67 @@
-% prepare stars 
-dataset = 'mcc_motor';
+clear all;
 
-SCRIPT_filter_outliers('mcc_motor')
- SCRIPT_filter_outliers('pointing_cassis')
-% SCRIPT_combine_datasets('mcc_motor_pointing_cassis', {'mcc_motor','pointing_cassis'})
-% 
-% % preprocess
-% dataset_name = 'mcc_motor_pointing_cassis';
-% 
-% SCRIPT_init_intrinsic(dataset_name);
-% SCRIPT_init_lensDistortion(dataset_name);
-% SCRIPT_init_extrinsic_spice(dataset_name);
-% SCRIPT_init_extrinsic_local(dataset_name);
-% SCRIPT_find_rotCommand_spice(dataset_name )
-% while SCRIPT_bundle_adjustment(dataset_name) > 0 
-% end
-% SCRIPT_solve_distortion(dataset_name)
+set_names = {'mcc_motor', 'pointing_cassis', 'commissioning_2'};
+dataset_path = '/home/tulyakov/Desktop/espace-server/';
 
-dataset_name = 'mcc_motor_pointing_cassis';
+%% prepare matched stars
+for n = 1:3
 
-SCRIPT_solve_sysRotErr(dataset_name)
+    % get folders structure
+    set = DATASET_starfields(dataset_path, set_names{n});
+    
+    % find all images
+    SCRIPT_search_folder(set);
+    
+    % collect images to sequences
+    SCRIPT_collect_sequences(set);
+    
+    % save exposures
+    SCRIPT_save_rawExp(set);
+    
+    % denoise exposures
+    SCRIPT_denoise(set);
+    
+    % recognize stars
+    SCRIPT_recognize(set);
+    
+    % collect information about detected stars from all images
+    SCRIPT_collect_star(set);
+    
+    % delete potential outliers
+    SCRIPT_filter_outliers(set);
+    
+end
 
-% validate
-dataset_name = 'commissioning_2';
-SCRIPT_init_extrinsic_spice(dataset_name);
-SCRIPT_init_lensDistortion(dataset_name);
-SCRIPT_init_intrinsic(dataset_name);
-SCRIPT_find_rotCommand_spice(dataset_name )
-copyfile('/home/tulyakov/Desktop/espace-server/CASSIS/tests/mcc_motor_pointing_cassis/OUTPUT/sysRotErr.csv',...
-'/home/tulyakov/Desktop/espace-server/CASSIS/cruise/160407_commissioning_2/OUTPUT/sysRotErr.csv')
-copyfile('/home/tulyakov/Desktop/espace-server/CASSIS/tests/mcc_motor_pointing_cassis/OUTPUT/lensDistortion.csv',...
-'/home/tulyakov/Desktop/espace-server/CASSIS/cruise/160407_commissioning_2/OUTPUT/lensDistortion.csv')
-copyfile('/home/tulyakov/Desktop/espace-server/CASSIS/tests/mcc_motor_pointing_cassis/OUTPUT/intrinsic_ba.csv',...
-'/home/tulyakov/Desktop/espace-server/CASSIS/cruise/160407_commissioning_2/OUTPUT/intrinsic_ba.csv')
+%% use first two datasets to estimate camera parameters
 
-SCRIPT_evaluate_model(dataset_name)
+% combine datasets
+SCRIPT_combine_datasets('mcc_motor_pointing_cassis', {'mcc_motor','pointing_cassis'})
+
+% get folders structure
+set = DATASET_starfields(dataset_path, 'mcc_motor_pointing_cassis');
+
+% init intrinsics using factory specs
+SCRIPT_init_intrinsic(set);
+
+% init lens distortion model using no distortion assumption
+SCRIPT_init_lensDistortion(set);
+
+% init extrinsics using SPICE
+SCRIPT_init_extrinsic_spice(set);
+
+% improve extrinsics for each image individually 
+SCRIPT_init_extrinsic_local(set);
+
+% find rotation commands using SPICE
+SCRIPT_find_rotCommand_spice(set);
+
+% bundle adjustment
+% repeat, delet outliers and repeat again until there are no outliers
+while SCRIPT_bundle_adjustment(set) > 0 
+end
+
+% lens distortion estimation
+SCRIPT_solve_distortion(set);
+
+% systematic rotation error estimation
+SCRIPT_solve_sysRotErr(set);

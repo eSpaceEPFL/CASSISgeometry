@@ -1,11 +1,11 @@
 % Given table of matched stars and initial extrinsic and intrinsic
 % SCRIPT refines extrinsic and intrinsics using multiple images.
 
-function nb_outliers = SCRIPT_bundle_adjustment(dataset_name )
+function nb_outliers = SCRIPT_bundle_adjustment(set )
 
  %%
 
-dataset_path = '/home/tulyakov/Desktop/espace-server';
+%dataset_path = '/home/tulyakov/Desktop/espace-server';
 %dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
 zscore_th = 3; 
@@ -17,7 +17,7 @@ fprintf('Performing bundle adjustment of extrinsic and intrinsic parameters\n');
 fprintf('(should run it 2 times)\n');
 
 % read folders structure
-set = DATASET_starfields(dataset_path, dataset_name);
+%set = DATASET_starfields(dataset_path, dataset_name);
 
 % read stars 
 inlierStarSummary = readtable(set.inlierStarSummary);

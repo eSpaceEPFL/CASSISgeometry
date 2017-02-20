@@ -1,8 +1,8 @@
-function SCRIPT_find_rotCommand_spice(dataset_name )
+function SCRIPT_find_rotCommand_spice(set )
 
 %%
 
-dataset_path = '/home/tulyakov/Desktop/espace-server';
+%dataset_path = '/home/tulyakov/Desktop/espace-server';
 %dataset_name = 'commissioning2_mcc_motor';
 addpath(genpath('../libraries'));
 
@@ -11,8 +11,7 @@ clc
 fprintf('Find rotation command from SPICE kernels\n');
 
 % read folders structure
-set = DATASET_starfields(dataset_path, dataset_name);
-
+%set = DATASET_starfields(dataset_path, dataset_name);
 
 % read extirinsic
 %extrinsic = readtable(set.extrinsic_ba);

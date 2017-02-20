@@ -1,9 +1,9 @@
 % Script flattens images, substracts dark field, masks out problems
 
-function SCRIPT_denoise(dataset_name)
+function SCRIPT_denoise(set)
 
 %%
-dataset_path = '/home/tulyakov/Desktop/espace-server';
+%dataset_path = '/home/tulyakov/Desktop/espace-server';
 %dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
 lowSigmaDOG  = 7;
@@ -15,7 +15,7 @@ clc
 fprintf('Substracting dark frame and DOG filtering\n');
 
 % read folders structure
-set = DATASET_starfields(dataset_path, dataset_name);
+%set = DATASET_starfields(dataset_path, dataset_name);
 
 % read exposures summary
 expSummary = readtable(set.exposuresSummary);

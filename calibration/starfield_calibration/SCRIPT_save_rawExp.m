@@ -1,27 +1,27 @@
 % Script flattens images, substracts dark field, masks out problems
 
-function SCRIPT_save_rawExp(dataset_name)
+function SCRIPT_save_rawExp(set)
 
 %% params and dependencies
 
-dataset_path = '/home/tulyakov/Desktop/espace-server';
+%dataset_path = '/home/tulyakov/Desktop/espace-server';
 %dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
 mult = 1/(2^16-1); % 14bit images in 16bit
-islevel0 = true;
+%islevel0 = true;
 skipFirst = 1;
 
 %%
 
 fprintf('Saving individual exposures for every sequence of %s dataset \n', dataset_name);
-if( islevel0 )
-    fprintf('(assuming level 0)\n');
-else
-    fprintf('(assuming level 1)\n');
-end
+%if( islevel0 )
+%    fprintf('(assuming level 0)\n');
+%else
+%    fprintf('(assuming level 1)\n');
+%end
 
 % read folder structure
-set = DATASET_starfields(dataset_path, dataset_name);
+%set = DATASET_starfields(dataset_path, dataset_name);
 
 % load sequences summary
 seqSummary = readtable(set.sequencesSummary);
@@ -29,7 +29,7 @@ nb_seq = height(seqSummary);
 f = figure;
 
 i = 1;
-for nseq = 1:30%nb_seq
+for nseq = 1:nb_seq
     
     fprintf('Starting %i sequence \n', nseq);
     
@@ -76,5 +76,5 @@ exp_time = exp_time';
 expSummary = table(seq_list, exp_list, t_list_, exp_time, fname_exp, fname_mask);
 writetable(expSummary, set.exposuresSummary); 
 
-
+end
 

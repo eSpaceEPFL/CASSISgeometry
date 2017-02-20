@@ -1,8 +1,8 @@
-function SCRIPT_collect_star(dataset_name)
+function SCRIPT_collect_star(set)
 
  %%
 
-dataset_path = '/home/tulyakov/Desktop/espace-server';
+%dataset_path = '/home/tulyakov/Desktop/espace-server';
 %dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
 
@@ -11,7 +11,7 @@ clc
 fprintf('Initializing rotation from SPICE kernel\n');
 
 % read folders structure
-set = DATASET_starfields(dataset_path, dataset_name);
+%set = DATASET_starfields(dataset_path, dataset_name);
 
 % read exposures summary
 expSummary = readtable(set.exposuresSummary);

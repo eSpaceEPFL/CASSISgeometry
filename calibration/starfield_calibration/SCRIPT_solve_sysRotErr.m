@@ -1,14 +1,14 @@
 % Given star matches, camera intrinsics and extrinsics SCRIPT estimates rational
 % distortion model.
 
-function SCRIPT_solve_sysRotErr(dataset_name)
+function SCRIPT_solve_sysRotErr(set)
 
 
  %%
-dataset_path = '/home/tulyakov/Desktop/espace-server';
-if ~exist('dataset_name','var')
-    dataset_name = 'mcc_motor_pointing_cassis';
-end
+%dataset_path = '/home/tulyakov/Desktop/espace-server';
+%if ~exist('dataset_name','var')
+%    dataset_name = 'mcc_motor_pointing_cassis';
+%end
 addpath(genpath('../libraries'));
 image_size = [2048 2048];
 single_sysErr_on = false;
@@ -18,7 +18,7 @@ clc;
 fprintf('Estimate systematic rotation error\n');
 
 % read folders structure
-set = DATASET_starfields(dataset_path, dataset_name);
+%set = DATASET_starfields(dataset_path, dataset_name);
 
 % read stars 
 starSummary = readtable(set.inlierStarSummary);

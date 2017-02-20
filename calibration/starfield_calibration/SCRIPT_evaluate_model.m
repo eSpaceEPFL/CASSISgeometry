@@ -1,24 +1,29 @@
-function SCRIPT_evaluate_model(dataset_name)
+function SCRIPT_evaluate_model(set, type)
 
 %%
-if ~exist('dataset_name','var')
-    dataset_name = 'commissioning_2';
+%if ~exist('dataset_name','var')
+%    dataset_name = 'commissioning_2';
+%end
+
+if strcmp(type, 'initial')
+    default_intrinsics = true;
+    default_lens = true;
+    default_extrinsics = true;
+elseif
+    default_intrinsics = false;
+    default_lens = false;
+    default_extrinsics = true;
 end
-
-default_intrinsics = false;
-default_lens = false;
-default_extrinsics = false;
-
-dataset_path = '/home/tulyakov/Desktop/espace-server';
+    %dataset_path = '/home/tulyakov/Desktop/espace-server';
 addpath(genpath('../libraries'));
 image_size = [2048 2048];
 
 %%
 clc
-fprintf('Evalute camera model\n');
+fprintf('Evaluate camera model\n');
 
 % read folders structure
-set = DATASET_starfields(dataset_path, dataset_name);
+%set = DATASET_starfields(dataset_path, dataset_name);
 
 %% read stars 
 starSummary = readtable(set.inlierStarSummary);

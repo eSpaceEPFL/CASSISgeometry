@@ -1,11 +1,11 @@
-function SCRIPT_init_extrinsic_spice(dataset_name)
+function SCRIPT_init_extrinsic_spice(set)
 
 %%
 
-dataset_path = '/home/tulyakov/Desktop/espace-server';
-if ~exist('dataset_name','var')
-    dataset_name = 'pointing_cassis';
-end
+%dataset_path = '/home/tulyakov/Desktop/espace-server';
+%if ~exist('dataset_name','var')
+%    dataset_name = 'pointing_cassis';
+%end
 addpath(genpath('../libraries'));
 
 %%
@@ -13,7 +13,7 @@ clc
 fprintf('Initializing rotation from SPICE kernels\n');
 
 % read folders structure
-set = DATASET_starfields(dataset_path, dataset_name);
+%set = DATASET_starfields(dataset_path, dataset_name);
 
 % intrinsics
 %intrinsic0 = readtable(set.intrinsic0);

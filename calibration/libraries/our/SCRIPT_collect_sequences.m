@@ -11,7 +11,7 @@ function SCRIPT_collect_sequences(set)
 %dataset_path = '/home/tulyakov/Desktop/espace-server';
 %dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
-islevel0 = true;
+%islevel0 = true;
 
 %%
 clc
@@ -43,7 +43,11 @@ for id = seq_ids
     seqContent = folderContent(indices,:);
     
     % make and save sequence object
-    seq = exposureSequence(set.level0, seqContent.fname_list, islevel0);
+    if isfield(set, 'level1')
+        seq = exposureSequence(set.level1, seqContent.fname_list, islevel0);
+    else
+        seq = exposureSequence(set.level0, seqContent.fname_list, islevel0);
+    end
     
     exp_time(i) = seq.exposure_time; 
     nb_exp(i) = length(unique(seqContent.exp_list));
