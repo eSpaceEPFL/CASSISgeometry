@@ -1,16 +1,16 @@
-function SCRIPT_init_intrinsic()
+function SCRIPT_init_intrinsic(set)
 
  %%
 
-dataset_path = '/home/tulyakov/Desktop/espace-server';
-dataset_name = 'mcc_motor';
+%dataset_path = '/home/tulyakov/Desktop/espace-server';
+%dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
 
 %%
 fprintf('Initializing intrinsic to camera specs\n');
 
 % read folders structure
-set = DATASET_starfields(dataset_path, dataset_name);
+%set = DATASET_starfields(dataset_path, dataset_name);
 
 %%
 f = 880;   % mm

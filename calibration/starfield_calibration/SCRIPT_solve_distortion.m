@@ -1,13 +1,12 @@
 % Given star matches, camera intrinsics and extrinsics SCRIPT estimates rational
 % distortion model.
 
-function SCRIPT_solve_distortion()
+function SCRIPT_solve_distortion(set)
 
+%%
 
- %%
-
-dataset_path = '/home/tulyakov/Desktop/espace-server';
-dataset_name = 'mcc_motor';
+%dataset_path = '/home/tulyakov/Desktop/espace-server';
+%dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
 image_size = [2048 2048];
 
@@ -16,7 +15,7 @@ clc;
 fprintf('Estimating rational lens distortion parameters\n');
 
 % read folders structure
-set = DATASET_starfields(dataset_path, dataset_name);
+%set = DATASET_starfields(dataset_path, dataset_name);
 
 % read stars 
 starSummary = readtable(set.inlierStarSummary);
@@ -69,14 +68,14 @@ xx_norm = pixel2norm(xx, image_size);
 xx_pred_norm = pixel2norm(xx_pred, image_size);
 
 % compute lifted coordinates
-chi_pred_norm = lift2D_to_6D(xx_pred_norm); 
+chi_norm = lift2D_to_6D(xx_norm); 
 
 % solve distortion
-fun = @(param) reshape(rational_model_image_side_error(param/param(end), xx_norm, chi_pred_norm), [], 1)
+fun = @(param) reshape(rational_model_image_side_error(param/param(end), xx_pred_norm, chi_norm), [], 1)
 options = optimoptions('lsqnonlin', 'Algorithm', 'levenberg-marquardt', 'Display', 'iter');
 sol0 = [A0(1,:)'; A0(2,:)'; A0(3,:)'];
 [sol,~,res] = lsqnonlin(fun, sol0, [], [], options);
-res0 = reshape(rational_model_image_side_error(sol0/sol0(end), xx_norm, chi_pred_norm), [], 1);
+res0 = reshape(rational_model_image_side_error(sol0/sol0(end), xx_pred_norm, chi_norm), [], 1);
 A = [sol(1:6)'; sol(7:12)'; sol(13:end)'];   
 A = A/A(end);
 
@@ -85,7 +84,7 @@ avgErr0 = mean(sqrt(sum(reshape(res0*sum(image_size), nb_points, 2).^2,2)));
 avgErr = mean(err);
 
 fprintf('Average error before distortion estimation %d \n', avgErr0);
-fprintf('Average error after before distortion estimation %d \n', avgErr);
+fprintf('Average error after distortion estimation %d \n', avgErr);
 
 % save distortion matrix
 lensDistortion = table(A);

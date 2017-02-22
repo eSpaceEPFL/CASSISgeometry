@@ -1,8 +1,8 @@
-function SCRIPT_init_extrinsic_local()
+function SCRIPT_init_extrinsic_local(set)
  %%
 
-dataset_path = '/home/tulyakov/Desktop/espace-server';
-dataset_name = 'mcc_motor';
+%dataset_path = '/home/tulyakov/Desktop/espace-server';
+%dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
 
 %%
@@ -10,7 +10,7 @@ clc
 fprintf('Improving rotation for each image individually, while keeping focal length fixed\n');
 
 % read folders structure
-set = DATASET_starfields(dataset_path, dataset_name);
+%set = DATASET_starfields(dataset_path, dataset_name);
 
 % read stars 
 inlierStarSummary = readtable(set.inlierStarSummary);
@@ -23,7 +23,7 @@ y0 = intrinsic0.y0;
 pixSize = intrinsic0.pixSize;
 
 % read extirinsic
-extrinsic0 = readtable(set.extrinsic0);
+extrinsic0 = readtable(set.extrinsic0_spice);
 nb_exp = height(extrinsic0);
 
 % improve rotation angles for each image
@@ -73,7 +73,7 @@ end
 fprintf('Average error with SPICE parameters %d \n', mean(avgErr0));
 fprintf('Average error after updating angles for every image %d \n', mean(avgErr));
     
-writetable(extrinsic0, set.extrinsic0);  
+writetable(extrinsic0, set.extrinsic0_local);  
 
 end
 

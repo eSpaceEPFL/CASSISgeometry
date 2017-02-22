@@ -1,15 +1,14 @@
 % Given table of matched stars and initial extrinsic and intrinsic
 % SCRIPT refines extrinsic and intrinsics using multiple images.
 
-function SCRIPT_bundle_adjustment()
+function nb_outliers = SCRIPT_bundle_adjustment(set )
 
  %%
 
-dataset_path = '/home/tulyakov/Desktop/espace-server';
-dataset_name = 'mcc_motor';
+%dataset_path = '/home/tulyakov/Desktop/espace-server';
+%dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
-zscore_th = 3; 
-neighb = 200;
+zscore_th = 3.0; 
 
 %%
 clc
@@ -17,7 +16,7 @@ fprintf('Performing bundle adjustment of extrinsic and intrinsic parameters\n');
 fprintf('(should run it 2 times)\n');
 
 % read folders structure
-set = DATASET_starfields(dataset_path, dataset_name);
+%set = DATASET_starfields(dataset_path, dataset_name);
 
 % read stars 
 inlierStarSummary = readtable(set.inlierStarSummary);
@@ -31,7 +30,7 @@ pixSize = intrinsic0.pixSize;
 f = intrinsic0.f;
 
 % read extirinsic
-extrinsic0 = readtable(set.extrinsic0);
+extrinsic0 = readtable(set.extrinsic0_local);
 nb_exp = height(extrinsic0);
 
 % fill initial quaternions
@@ -64,6 +63,7 @@ fprintf('Average error after BA %d \n', avgErr);
 
 % find outliers
 err = sqrt(sum(reshape(res, nb_points, 2).^2,2));
+neighb = round(nb_points/10);
 mask = filter_outliers(xx, err, neighb, zscore_th);
 nb_outliers = nnz(~mask);
 weight = [mask'; mask'];

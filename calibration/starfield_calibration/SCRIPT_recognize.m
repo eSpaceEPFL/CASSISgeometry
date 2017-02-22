@@ -1,19 +1,20 @@
 % Script recogizes stars stars
 
-function SCRIPT_recognize()
+function SCRIPT_recognize(set)
 
 %%
 
-dataset_path = '/home/tulyakov/Desktop/espace-server';
-dataset_name = 'mcc_motor';
+%dataset_path = '/home/tulyakov/Desktop/espace-server';
+%dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
-flux_th = 1800;
+%flux_th = 1800;
 
 %%
+clc
 fprintf('Detecting and recognising stars\n');
 
 % read folders structure
-set = DATASET_starfields(dataset_path, dataset_name);
+%set = DATASET_starfields(dataset_path, dataset_name);
 
 % read exposures summary
 expSummary = readtable(set.exposuresSummary);

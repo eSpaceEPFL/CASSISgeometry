@@ -1,27 +1,30 @@
 % Script flattens images, substracts dark field, masks out problems
 
-function SCRIPT_save_rawExp()
+function SCRIPT_save_rawExp(set)
 
 %% params and dependencies
 
-dataset_path = '/home/tulyakov/Desktop/espace-server';
-dataset_name = 'mcc_motor';
+%dataset_path = '/home/tulyakov/Desktop/espace-server';
+%dataset_name = 'pointing_cassis';
 addpath(genpath('../libraries'));
 mult = 1/(2^16-1); % 14bit images in 16bit
-islevel0 = true;
-skipFirst = 2;
-
+%islevel0 = true;
+if( strcmp(set.name, 'commissioning_2' ) || strcmp(set.name, 'pointing_cassis' ) )
+    skipFirst = 1;
+else
+    skipFirst = 2;
+end
 %%
 
-fprintf('Saving individual exposures for every sequence of %s dataset \n', dataset_name);
-if( islevel0 )
-    fprintf('(assuming level 0)\n');
-else
-    fprintf('(assuming level 1)\n');
-end
+fprintf('Saving individual exposures for every sequence of %s dataset \n', set.name);
+%if( islevel0 )
+%    fprintf('(assuming level 0)\n');
+%else
+%    fprintf('(assuming level 1)\n');
+%end
 
 % read folder structure
-set = DATASET_starfields(dataset_path, dataset_name);
+%set = DATASET_starfields(dataset_path, dataset_name);
 
 % load sequences summary
 seqSummary = readtable(set.sequencesSummary);
@@ -39,21 +42,28 @@ for nseq = 1:nb_seq
      
     % save all exposures
     nb_exp = seq.getExposureNb();
-    for nexp = 1+skipFirst:nb_exp 
+    for nExp = 1+skipFirst:nb_exp 
         
         % get exposure and mask
-        [exp, mask, time_num] = seq.getExposure(nexp);
+        corrLensDist_on = false;
+        virtualImage_on = true;
+        adjustSubExp_on = false;
+        
+        [exp, mask] = seq.getExp(nExp, corrLensDist_on, virtualImage_on, adjustSubExp_on);
+        time_num = seq.getExpTime(nExp);
+        
         time_str = cassis_num2time(time_num);
         fname_exp{i}  = [time_str '.tif']; 
         fname_mask{i} = [time_str '_mask.tif'];
         seq_list(i) = seqSummary.seq_list(nseq);
         t_list_{i} = time_str;
-        exp_list(i) = nexp;
+        exp_list(i) = nExp;
         exp_time(i) = seq.exposure_time;
-         if islevel0
+        
+        if isfield(set, 'level0')
             exp = double(exp)*mult;
-         end
-        exp = flipud(exp);
+        end
+
         exp = imadjust(exp);
         
         % save exposure and mask
@@ -76,5 +86,5 @@ exp_time = exp_time';
 expSummary = table(seq_list, exp_list, t_list_, exp_time, fname_exp, fname_mask);
 writetable(expSummary, set.exposuresSummary); 
 
-
+end
 
