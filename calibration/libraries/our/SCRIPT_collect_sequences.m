@@ -44,9 +44,9 @@ for id = seq_ids
     
     % make and save sequence object
     if isfield(set, 'level1')
-        seq = exposureSequence(set.level1, seqContent.fname_list, islevel0);
+        seq = exposureSequence(set.level1, seqContent.fname_list, false);
     else
-        seq = exposureSequence(set.level0, seqContent.fname_list, islevel0);
+        seq = exposureSequence(set.level0, seqContent.fname_list, true);
     end
     
     exp_time(i) = seq.exposure_time; 

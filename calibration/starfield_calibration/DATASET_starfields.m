@@ -100,6 +100,11 @@ function set = DATASET_starfields(dataset_path, subset_name)
     % lens distortion estimation
     set.lensDistortion = [subsetpath '/OUTPUT/lensDistortion.csv'];
     
+    % final parameters
+    set.intrinsic_final = 'intrinsic_final.csv';
+    set.lensDistortion_final ='lensDistortion_final.csv';
+    set.sysRotErr_final = 'sysRotErr_final.csv';
+    
     % folder content summary
     set.folderContent = [subsetpath '/OUTPUT/folderContent.csv']; 
     

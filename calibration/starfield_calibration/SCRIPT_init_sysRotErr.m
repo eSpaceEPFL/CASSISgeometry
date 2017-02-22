@@ -1,16 +1,16 @@
-function SCRIPT_init_sysRotErr()
+function SCRIPT_init_sysRotErr(set)
 
  %%
 
-dataset_path = '/home/tulyakov/Desktop/espace-server';
-dataset_name = 'mcc_motor';
+%dataset_path = '/home/tulyakov/Desktop/espace-server';
+%dataset_name = 'mcc_motor';
 addpath(genpath('../libraries'));
 
 %%
 fprintf('Initializing systematic rotation error\n');
 
 % read folders structure
-set = DATASET_starfields(dataset_path, dataset_name);
+%set = DATASET_starfields(dataset_path, dataset_name);
 
 %%
 R = eye(3,3); % no rotation

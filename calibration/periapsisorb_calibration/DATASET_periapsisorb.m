@@ -7,11 +7,11 @@ function set = DATASET_periapsisorb(dataset_path, subset_name)
     
 	if( strcmp('periapsis_orbit09', subset_name) )
    
-        subsetpath = [dataset_path '/CASSIS/tests/161122_periapsis_orbit09'];
+        subsetpath = [dataset_path '/CASSIS/aerobraking/161122_periapsis_orbit09'];
     
     elseif( strcmp('periapsis_orbit10', subset_name) )
    
-        subsetpath = [dataset_path '/CASSIS/tests/161126_periapsis_orbit10'];
+        subsetpath = [dataset_path '/CASSIS/aerobraking/161126_periapsis_orbit10'];
                 
     else
         
@@ -49,12 +49,13 @@ function set = DATASET_periapsisorb(dataset_path, subset_name)
         
     % ----------- summaries -------------
 
-    % parameters
+    % final parameters
+    set.intrinsic_final = [subsetpath '/OUTPUT/intrinsic_final.csv'];
+    set.lensDistortion_final = [subsetpath '/OUTPUT/lensDistortion_final.csv'];
+    set.sysRotErr_final = [subsetpath '../../sysRotErr_final.csv'];
+    
     set.extrinsic_spice = [subsetpath '/OUTPUT/extrinsic0_spice.csv'];
-    set.intrinsic = [subsetpath '/OUTPUT/intrinsic_ba.csv'];
-    set.sysRotErr = [subsetpath '/OUTPUT/sysRotErr.csv'];
     set.rotCommand = [subsetpath '/OUTPUT/rotCommand.csv'];
-    set.lensDistortion = [subsetpath '/OUTPUT/lensDistortion.csv'];
     
     % folder content summary
     set.folderContent = [subsetpath '/OUTPUT/folderContent.csv']; 

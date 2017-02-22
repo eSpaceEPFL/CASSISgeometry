@@ -14,7 +14,11 @@ addpath(genpath('../libraries'));
 
 time_th = 30e-4; % 30 sec 
 ispace_th = 0.5;
-neigh = 2; 
+if( strcmp(set.name, 'commissioning_2' ) || strcmp(set.name, 'pointing_cassis' ))
+    neigh = 1;
+else
+    neigh = 2;
+end
 min_points_per_image = 10;
 flux_th = 3000;
 
