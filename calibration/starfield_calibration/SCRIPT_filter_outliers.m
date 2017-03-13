@@ -88,7 +88,7 @@ fprintf('%i stars passed minimum stars in frame requirement\n', nb_stars)
 unique_time = unique( cassis_time2num(allStarSummary.time) ) ;
 nb_time = length(unique_time);
 text = {};
-figure;
+f = figure('units','normalized','outerposition',[0 0 1 1]);
 for ntime = 1:nb_time
     index = unique_time(ntime) == cassis_time2num(allStarSummary.time);
     plot(allStarSummary.x(index), allStarSummary.y(index), 'o'); hold on;
@@ -100,6 +100,9 @@ ax.XAxisLocation = 'top'
 axis([0 2048 0 2048]);
 legend(text,'Location', 'bestoutside');
 grid on;
+hgexport(f, set.inlierStarSummary_IMG,  ...
+     hgexport('factorystyle'), 'Format', 'png'); 
+
 writetable(allStarSummary, set.inlierStarSummary);
 
 end

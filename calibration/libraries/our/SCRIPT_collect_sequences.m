@@ -27,7 +27,7 @@ nb_seq = length(seq_ids);
 
 %%%
 %seq_ids = setdiff(seq_ids,0)
-
+%seq_ids = 4
 
 fprintf('%i sequences were found\n', nb_seq);
 fprintf('Decoding sequences:\n');
@@ -49,7 +49,7 @@ for id = seq_ids
         seq = exposureSequence(set.level0, seqContent.fname_list, true);
     end
     
-    exp_time(i) = seq.exposure_time; 
+    exp_length(i) = seq.exp_length; 
     nb_exp(i) = length(unique(seqContent.exp_list));
     start_time{i} = seqContent.t_list_{1};
     finish_time{i} = seqContent.t_list_{end};
@@ -66,9 +66,9 @@ seq_list = seq_ids';
 start_time = start_time';
 finish_time = finish_time';
 nb_exp = nb_exp';
-exp_time = exp_time';
+exp_length = exp_length';
 
-seqSummary = table(seq_list, start_time, finish_time, exp_time, nb_exp);
+seqSummary = table(seq_list, start_time, finish_time, exp_length, nb_exp);
 writetable(seqSummary, set.sequencesSummary); 
     
 end

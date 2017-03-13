@@ -1,7 +1,7 @@
 % Given table of matched stars and initial extrinsic and intrinsic
 % SCRIPT refines extrinsic and intrinsics using multiple images.
 
-function nb_outliers = SCRIPT_bundle_adjustment(set )
+function nb_outliers = SCRIPT_bundle_adjustment(set, iter)
 
  %%
 
@@ -12,8 +12,8 @@ zscore_th = 3.0;
 
 %%
 clc
-fprintf('Performing bundle adjustment of extrinsic and intrinsic parameters\n');
-fprintf('(should run it 2 times)\n');
+fprintf('Bundle adjustment of extrinsic and intrinsic parameters\n');
+
 
 % read folders structure
 %set = DATASET_starfields(dataset_path, dataset_name);
@@ -68,7 +68,7 @@ mask = filter_outliers(xx, err, neighb, zscore_th);
 nb_outliers = nnz(~mask);
 weight = [mask'; mask'];
 
-figure;
+f = figure('units','normalized','outerposition',[0 0 1 1]);
 C = err;
 R = 100*err / 10;
 scatter(xx(:,1), xx(:,2), R, C, 'filled'); hold on
@@ -81,12 +81,21 @@ ax = gca;
 ax.YDir = 'reverse';
 ax.XAxisLocation = 'top'
 colorbar;
+hgexport(f, sprintf(set.ba_residuals_IMG, iter),  ...
+     hgexport('factorystyle'), 'Format', 'png'); 
+
 
 fprintf('%i points were masked out as outliers \n', nb_outliers);
 
 % retrive solution
 [f, Q] =  vec2_f_Q(sol, nb_exp);
 fprintf('New focal length is  %d \n', f);
+
+% normalize and make sure that first componets is positive
+for i = 1:size(Q,1)
+    q = normalize( quaternion(Q(i,:)) );
+    Q(i,:) = q.e'*sign(q.e(1));
+end
 
 % save intrinsics
 intrinsic = table(f, x0, y0, pixSize);
@@ -112,7 +121,7 @@ function err = clc_res(sol, x0, y0, pixSize, xx, XX, rotIdx, nb_times)
 
     % precompute rotation matrices for speed
     for ntime = 1:nb_times
-        Qcur = quaternion(Q(ntime,:));
+        Qcur = normalize( quaternion(Q(ntime,:)) );
         R(:,:,ntime) = RotationMatrix(Qcur);
     end
     
