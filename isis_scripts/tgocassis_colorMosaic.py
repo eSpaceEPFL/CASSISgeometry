@@ -1,4 +1,4 @@
-#!/usr/bin/python -tt
+#!/HDD1/Programs/anaconda2/bin/python -tt
 
 import sys
 import re
@@ -52,8 +52,6 @@ def main():
     shutil.rmtree(tmpDir) 
 
     return 1
-
-'''
 
 if  __name__ == '__main__':
     main()

@@ -30,7 +30,8 @@ def main():
         nSeq = xmlFilesBySeq.index(seqXmlFiles)
         for bandXmlFiles in xmlFilesByBand: 
             nBand = xmlFilesByBand.index(bandXmlFiles)
-            tgo.write_lines_list('seq%i_band%i.lis' % (nSeq, nBand), bandXmlFiles)
+            bandName = tgo.num2type_subExp(nBand)
+            tgo.write_lines_list('%s/seq%i_%s.lis' % (cassisFolder, nSeq, bandName), bandXmlFiles)
             for file in bandXmlFiles: 
                 print('Sequence %i, band %i, file %s' % (nSeq, nBand, file))
 
