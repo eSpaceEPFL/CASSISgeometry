@@ -55,7 +55,7 @@ function set = DATASET_starfields(dataset_path, subset_name)
     set.level0 = [subsetpath '/level0'];    
     
     % kernel
-    set.spice = [dataset_path '/naif/ExoMars2016/kernels/mk/em16_ops_st.tm'];
+    set.spice = [dataset_path '/naif/ExoMars2016/kernels/mk/em16_ops.tm'];
         
     % ----------- output --------------
     

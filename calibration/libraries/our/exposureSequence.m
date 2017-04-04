@@ -70,14 +70,74 @@ classdef exposureSequence
         
       end
       
+      function [exp_mapProj, mask_mapProj, Rmap] = getMapProjExp(obj, nExp, subExp_vec, corrLensDist_on, adjustSubExp_on)
+         
+          
+          [exp, mask] = getExp(obj, nExp, subExp_vec, corrLensDist_on, true, adjustSubExp_on); % virtual image
+          
+          [x0_sen, y0_sen, w, h] = getExpSensorBound(obj);
+          xe_sen = x0_sen + w;
+          ye_sen = y0_sen + h;
+          xy_sen = [x0_sen, y0_sen;
+                    xe_sen, y0_sen;
+                    xe_sen, ye_sen;
+                    x0_sen, ye_sen];% start from top-left, proceed in clockwise direction
+          
+          [xy_vir(:,1), xy_vir(:,2)] = cassis_sensor2virtual(xy_sen(:,1), xy_sen(:,2), obj.image_size(1));
+                        
+          [latLon(:,1), latLon(:,2)] = getExpMapBound(obj, nExp);
+          
+          % get pixel size
+          pixelSize = max([hypot( ...
+               latLon(1,2) - latLon(2,2), ...
+               latLon(1,1) - latLon(2,1)) / w, ...
+               hypot( ...
+               latLon(1,2) - latLon(4,2), ...
+               latLon(1,1) - latLon(4,1)) / h]);
+          
+          % get wold limits
+          lonLimits = pixelSize ...
+            * [floor(min(latLon(:,2)) / pixelSize), ...
+               ceil(max(latLon(:,2)) / pixelSize)];
+           
+          latLimits = pixelSize ...
+               * [floor(min(latLon(:,1)) / pixelSize), ...
+               ceil(max(latLon(:,1)) / pixelSize)];
+          
+          H = round(diff(latLimits) / pixelSize);
+          W = round(diff(lonLimits) / pixelSize);
+          ref = imref2d([H W], lonLimits, latLimits);
+           
+          tform = fitgeotrans([xy_vir(:,1) xy_vir(:,2)], [latLon(:,2) latLon(:,1)],'projective'); % longitude projects to x 
+          exp_mapProj = imwarp(exp, tform, 'OutputView', ref);
+          mask_mapProj = imwarp(mask, tform, 'OutputView', ref);
+
+          % canonically:
+          % 1. lattitude decrease from top to bottom 
+          % 2. longitude increase from left to right
+          if latLimits(1) < latLimits(2)
+               exp_mapProj = flipud(exp_mapProj);
+               mask_mapProj = flipud(mask_mapProj);
+          end
+          if lonLimits(1) > lonLimits(2)
+               exp_mapProj =  fliprl(exp_mapProj);
+               mask_mapProj =  fliprl(mask_mapProj);
+          end
+          
+          Rmap = maprasterref('RasterSize', ref.ImageSize, ...
+               'YWorldLimits', ref.YWorldLimits,'XWorldLimits', ref.XWorldLimits, 'ColumnsStartFrom','north', 'RowsStartFrom','west');
+          
+%           figure; 
+%           exp_mapProj = im2uint16(exp_mapProj);
+%           mapshow(exp_mapProj, Rmap);
+%           xlabel('lon');
+%           ylabel('lat');
+      end
+      
       function [exp, mask] = getExp(obj, nExp, subExp_vec, corrLensDist_on, virtualImage_on, adjustSubExp_on)
           
           mask = false(obj.image_size); 
           exp = zeros(obj.image_size);
-          
-          %if ~exist('subExps','var')
-          %    subExps = 1:length(obj.subExp_sensor);
-          %end
               
           nbSubExp = length(subExp_vec);
           
@@ -86,15 +146,8 @@ classdef exposureSequence
               nSubExp = subExp_vec(subExp_idx);              
               
               [x0_sensor, y0_sensor, w, h] = obj.getSubExpSensorBound(nSubExp);
-              
                            
               [subExp, subExp_mask] = getSubExp(obj, nSubExp, nExp, corrLensDist_on, adjustSubExp_on);
-              
-%               if adjustSubExp_on
-%                   
-%                   subExp = imadjust(subExp, stretchlim(subExp(subExp_mask(:))));
-%               
-%               end
 
               exp(y0_sensor:y0_sensor + h - 1, x0_sensor:x0_sensor + w - 1) = subExp; 
               mask(y0_sensor:y0_sensor + h - 1, x0_sensor:x0_sensor + w - 1) = subExp_mask; 
@@ -160,19 +213,7 @@ classdef exposureSequence
 %           R = imref2d([mOutput nOutput],lonWorldLimits,latWorldLimits);
 %           
 %           
-%           if latWorldLimits(1) < latWorldLimits(2)
-%               if lonWorldLimits(1) < lonWorldLimits(2)
-%                   exp = flipud(imwarp(exp, tform, 'OutputView', R));
-%               else
-%                   exp = fliprl(flipud(imwarp(exp, tform, 'OutputView', R)));
-%               end
-%           else
-%               if lonWorldLimits(1) < lonWorldLimits(2)
-%                   exp = (imwarp(image_pano, tform, 'OutputView', R));
-%               else
-%                   exp = fliprl((imwarp(exp, tform, 'OutputView', R)));
-%               end
-%           end
+
 %           
 %           
 %           Rgeo = georasterref('RasterSize',R.ImageSize, ...
@@ -407,10 +448,37 @@ classdef exposureSequence
       
       %end
             
-      function [x_sensor, y_sensor, w, h] = getSubExpSensorBound(obj, nSubExp)
+      function [x0_sensor, y0_sensor, w, h] = getSubExpSensorBound(obj, nSubExp)
           
-         [x_sensor, y_sensor, w, h] = deal(obj.subExp_sensor_pos{nSubExp}(1), obj.subExp_sensor_pos{nSubExp}(2),...
+         [x0_sensor, y0_sensor, w, h] = deal(obj.subExp_sensor_pos{nSubExp}(1), obj.subExp_sensor_pos{nSubExp}(2),...
                      obj.subExp_sensor_pos{nSubExp}(3), obj.subExp_sensor_pos{nSubExp}(4));
+      
+      end
+      
+      function [x0_sensor, y0_sensor, w, h] = getExpSensorBound(obj)
+                   
+         [x0_sensor, y0_sensor, w, h] = deal(1, 1, obj.image_size(2), obj.image_size(1));
+      
+      end
+      
+      function [lat, lon] = getExpMapBound(obj, nExp)
+          
+          [x0_sen, y0_sen, w, h] = getExpSensorBound(obj);
+          xe_sen = x0_sen + w;
+          ye_sen = y0_sen + h;
+          xy_sen = [x0_sen, y0_sen;
+                    xe_sen, y0_sen;
+                    xe_sen, ye_sen;
+                    x0_sen, ye_sen]; % start from top-left, proceed in clockwise direction
+                    
+          % sensor to virtual image 
+          [xy_vir(:,1), xy_vir(:,2)] = cassis_sensor2virtual(xy_sen(:,1), xy_sen(:,2), obj.image_size(1));
+                    
+          % virtual image to lat lon 
+          timenum = obj.getExpTime(nExp);
+          [f, pixSize, x0, y0] = obj.getIntrinsics();
+          [latLon(:,1), latLon(:,2)] = xy_virtualPlane_2_latLon(xy_vir(:,1), xy_vir(:,2), timenum, pixSize, f, x0, y0);
+          [lat, lon] = deal(latLon(:,1), latLon(:,2));
       
       end
       
@@ -464,9 +532,9 @@ classdef exposureSequence
               [x_sensor, y_sensor] = cassis_subexp2sensor(x_subExp, y_subExp, x0_sensor, y0_sensor);
               
               % sensor-2-frontal focal plane coordinates
-              %[x_front, y_front] = cassis_sensor2virtual(x_sensor, y_sensor, obj.image_size(1));
-              x_front = x_sensor;
-              y_front  = y_sensor;
+              [x_front, y_front] = cassis_sensor2virtual(x_sensor, y_sensor, obj.image_size(1));
+             % x_front = x_sensor;
+             % y_front  = y_sensor;
               
               % normalize
               xx = [x_front(:) y_front(:)];
@@ -487,25 +555,29 @@ classdef exposureSequence
               i_front = reshape(i_front, size(x_front));
               j_front = reshape(j_front, size(x_front));
               
-             % [i_sensor, j_sensor] = cassis_virtual2sensor(i_front, j_front, obj.image_size(1));  
-               i_sensor = i_front;
-               j_sensor = j_front;
+              [i_sensor, j_sensor] = cassis_virtual2sensor(i_front, j_front, obj.image_size(1));  
+             %  i_sensor = i_front;
+             %  j_sensor = j_front;
              
               % sensor-2-subexposure
               [i_subExp, j_subExp] = cassis_sensor2subexp(i_sensor, j_sensor,  x0_sensor, y0_sensor);
               
               % interpolate
               subExp = interp2(x_subExp, y_subExp, subExp, i_subExp, j_subExp);
-              mask = ~isnan(subExp);
-              subExp(~mask) = 0;
+           
           end
         
+          mask = true(size(subExp));
+          mask(:,1:5) = false;
+          mask(:,end-4:end) = false;
+          mask(1:5,:) = false;
+          mask(end-4:end,:) = false;
           
           if adjustSubExp_on
               
             lim = getSubExpStretchLim(obj, nSubExp);
             subExp = imadjust(subExp,lim);
-            subExp(~mask) = 0;
+           % subExp(~mask) = 0;
             
           end
                   
@@ -607,10 +679,18 @@ classdef exposureSequence
               min_lat = min(lat);
               max_lon = max(lon);
               min_lon = min(lon);
-
-              pano_width  = round(diff([min_lon max_lon]) / max_deg_per_pix);
-              pano_height = round(diff([min_lat max_lat]) / max_deg_per_pix);
-              pano_ref = imref2d([pano_height pano_width], [min_lon max_lon], [min_lat max_lat]);
+    
+              lonWorldLimits = max_deg_per_pix ...
+             * [floor(min_lon / max_deg_per_pix), ...
+             ceil(max_lon / max_deg_per_pix)];
+         
+            latWorldLimits = max_deg_per_pix...
+             * [floor(min_lat / max_deg_per_pix), ...
+             ceil(max_lat / max_deg_per_pix)];
+           
+              pano_width  = round(diff([lonWorldLimits]) / max_deg_per_pix);
+              pano_height = round(diff([latWorldLimits]) / max_deg_per_pix);
+              pano_ref = imref2d([pano_height pano_width], lonWorldLimits, latWorldLimits);
           else
               pano_width = pano_ref.ImageSize(2); 
               pano_height = pano_ref.ImageSize(1);
@@ -632,11 +712,13 @@ classdef exposureSequence
               tform = fitgeotrans(xy_sen, lonLat, 'projective');
               
               [subExp, subExp_mask] = obj.getSubExp(nSubExp, nExp, corrLensDist_on, true);
-              warped_subExp = imwarp(double(subExp), tform, 'OutputView', pano_ref);
-              warped_subExp_mask = imwarp(double(subExp_mask), tform, 'OutputView', pano_ref);
-             
-              pano = step(blender, pano, warped_subExp, warped_subExp_mask);
-              pano_mask = step(blender, pano_mask, warped_subExp_mask, warped_subExp_mask);
+              inputRef = imref2d(size(subExp), [x0_sen xe_sen], [y0_sen ye_sen]);
+              warped_subExp = imwarp(double(subExp), inputRef, tform, 'OutputView', pano_ref);
+              warped_subExp_mask = imwarp(subExp_mask,inputRef, tform, 'nearest', 'OutputView', pano_ref);
+             % warped_subExp(~warped_subExp_mask) = 0;  
+              
+              pano = step(blender, pano, warped_subExp, warped_subExp_mask>0);
+              pano_mask = step(blender, pano_mask, double(warped_subExp_mask), warped_subExp_mask>0);
              
           end
           

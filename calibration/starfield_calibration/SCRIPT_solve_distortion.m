@@ -86,12 +86,12 @@ avgErr = mean(err);
 fprintf('Average error before distortion estimation %d \n', avgErr0);
 fprintf('Average error after distortion estimation %d \n', avgErr);
 
-% save distortion matrix
+% save un-distortion matrix
 lensDistortion = table(A);
 writetable(lensDistortion, set.lensDistortion);
 
-% show training residuals
 
+% show training residuals
 f1 = figure('units','normalized','outerposition',[0 0 1 1]);;
 C = err;
 R = 100*err / 10;

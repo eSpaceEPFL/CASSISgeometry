@@ -1,4 +1,5 @@
-#!/usr/bin/python -tt
+#!/HDD1/Programs/anaconda2/bin/python -tt
+
 
 import sys
 import re
@@ -9,8 +10,8 @@ import tgocassis_utils as tgo
         
 def main():
     if len(sys.argv) < 3:
-        print('tgocassis_mosaic <subExp_list.txt>  <mosaic.cub>')
-        print('<bandn.lis> is a file that contains name of cassis xml files on every line\n' \
+        print('tgocassis_mosaic <subexp.lis>  <mosaic.cub>')
+        print('<subexp.lis> is a file that contains name of cassis xml files on every line\n' \
               '<mosaic.cub> is output cube with mosaic' \
               '<map.cub> is optional map parameter')
         sys.exit()

@@ -5,9 +5,9 @@ import re
 import tempfile
 import os
 import shutil
-import cv2
-import numpy as np
 import tgocassis_utils as tgo
+import numpy as np
+import cv2
 
 def main():
     if len(sys.argv) < 3:

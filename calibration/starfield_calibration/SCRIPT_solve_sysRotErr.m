@@ -87,15 +87,15 @@ if single_sysErr_on
 else
     % 2 matrices
     q(:,1) = quaternion.rotationmatrix( eye(3) );
-    q(:,2) = quaternion.rotationmatrix( eye(3) );
+   % q(:,2) = quaternion.rotationmatrix( eye(3) );
     Q(:,1) = q(:,1).e';
-    Q(:,2) = q(:,2).e';
-    angleRef = [180 360];
+   % Q(:,2) = q(:,2).e';
+    angleRef = [0];
 end
 sol0 = Q_2vec(Q); 
 
 % use only 360+/-5 deg and 180 +/- 5 deg measurments
-valid = abs(angle'-180) < 5 | abs(angle'-360) < 5;
+valid = abs(angle'-0) < 1 | abs(angle'-360) < 1;
 xx_corr = xx_corr(valid,:);
 XX = XX(valid,:);
 R = R(:,:,valid);
@@ -118,10 +118,10 @@ fprintf('Average error with SPICE pointing before systematic error correction %d
 fprintf('Average error with SPICE pointing after systematic error correction %d \n', avgErr);
 
 if ~single_sysErr_on
-    [angle180, ~] = AngleAxis( quaternion( Q(:,1) ) );
-    [angle360, ~] = AngleAxis( quaternion( Q(:,2) ) );
+%    [angle180, ~] = AngleAxis( quaternion( Q(:,1) ) );
+    [angle360, ~] = AngleAxis( quaternion( Q(:,1) ) );
 
-    fprintf('For angle %d correction is %d degree \n', 180, 360-rad2deg(angle180));
+ %   fprintf('For angle %d correction is %d degree \n', 180, 360-rad2deg(angle180));
     fprintf('For angle %d correction is %d degree \n', 360, 360-rad2deg(angle360));
 end
 

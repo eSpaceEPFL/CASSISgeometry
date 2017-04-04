@@ -1,4 +1,5 @@
-#!/usr/bin/python -tt
+#!/HDD1/Programs/anaconda2/bin/python -tt
+
 '''
 Function is used to print content of folder with CaSSIS data.
 '''
@@ -28,12 +29,13 @@ def main():
     for seqXmlFiles in xmlFilesBySeq:
         xmlFilesByBand = tgo.split_filesBySubExp(seqXmlFiles)
         nSeq = xmlFilesBySeq.index(seqXmlFiles)
-        for bandXmlFiles in xmlFilesByBand: 
-            nBand = xmlFilesByBand.index(bandXmlFiles)
-            bandName = tgo.num2type_subExp(nBand)
-            tgo.write_lines_list('%s/seq%i_%s.lis' % (cassisFolder, nSeq, bandName), bandXmlFiles)
-            for file in bandXmlFiles: 
-                print('Sequence %i, band %i, file %s' % (nSeq, nBand, file))
+        for bandXmlFiles in xmlFilesByBand:
+            if len(bandXmlFiles) > 0:
+                nBand = xmlFilesByBand.index(bandXmlFiles)
+                bandName = tgo.num2type_subExp(nBand)
+                tgo.write_lines_list('%s/seq%i_%s.lis' % (cassisFolder, nSeq, bandName), bandXmlFiles)
+                for file in bandXmlFiles: 
+                    print('Sequence %i, band %i, file %s' % (nSeq, nBand, file))
 
     return 1
 
