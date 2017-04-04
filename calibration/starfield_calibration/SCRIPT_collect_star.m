@@ -28,7 +28,7 @@ for nexp = 1:nb_exp
     if nb_stars > 0 
         
         time = cell(nb_stars,1);
-        time(:) = expSummary.t_list_(nexp);
+        time(:) = expSummary.exp_time(nexp);
         starSummary.time = time;
     
         if exist('allStarSummary','var') 
@@ -41,7 +41,9 @@ for nexp = 1:nb_exp
 end 
 
 fprintf('Totally %i stars...\n', height(allStarSummary));
-figure;
-scatter(allStarSummary.x, allStarSummary.y, [], cassis_time2num(allStarSummary.time));
+%f=figure;
+%scatter(allStarSummary.x, allStarSummary.y, [], cassis_time2num(allStarSummary.time));
+%saveas(f, set.allStarSummary_IMG)
+
 writetable(allStarSummary, set.allStarSummary); 
         

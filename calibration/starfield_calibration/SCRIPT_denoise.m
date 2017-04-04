@@ -19,13 +19,13 @@ fprintf('Substracting dark frame and DOG filtering\n');
 
 % read exposures summary
 expSummary = readtable(set.exposuresSummary);
-unique_exp = unique(expSummary.exp_time);
+unique_exp = unique(expSummary.exp_length);
 nb_unique_exp = length(unique_exp);
 nb_exp = height(expSummary);
 
 fprintf('Computing dark frame for every exposure length\n');
 for nunique_exp = 1:nb_unique_exp
-    uniqueexpSummary = expSummary(unique_exp(nunique_exp) == expSummary.exp_time,:);
+    uniqueexpSummary = expSummary(unique_exp(nunique_exp) == (expSummary.exp_length),:);
     for nfile = 1:min(height(uniqueexpSummary),200)
         I = im2double(imread([set.raw_exposures '/' uniqueexpSummary.fname_exp{nfile}]));
         Istack(:,:,nfile) = I;
@@ -35,11 +35,11 @@ for nunique_exp = 1:nb_unique_exp
 end
 
 fprintf('Substracting dark frame and DOG fitering\n');
-f = figure;
+%f = figure;
 for nexp = 1:nb_exp
     
     fprintf('%s...\n', expSummary.fname_exp{nexp});
-    ind = find(expSummary.exp_time(nexp) == unique_exp);
+    ind = find((expSummary.exp_length(nexp)) == unique_exp);
     
     % substract dark frame
     I = im2double(imread([set.raw_exposures '/' expSummary.fname_exp{nexp}]));
@@ -59,7 +59,7 @@ for nexp = 1:nb_exp
     imwrite(uint16(I*2^16),fname); 
    
     % save visualization
-    figure(f); imshow(I*10);    
+    %figure(f); imshow(I*10);    
     %pause(0.1);
 end
 

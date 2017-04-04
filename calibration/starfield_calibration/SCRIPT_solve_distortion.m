@@ -86,17 +86,17 @@ avgErr = mean(err);
 fprintf('Average error before distortion estimation %d \n', avgErr0);
 fprintf('Average error after distortion estimation %d \n', avgErr);
 
-% save distortion matrix
+% save un-distortion matrix
 lensDistortion = table(A);
 writetable(lensDistortion, set.lensDistortion);
 
-% show training residuals
 
-figure;
+% show training residuals
+f1 = figure('units','normalized','outerposition',[0 0 1 1]);;
 C = err;
 R = 100*err / 10;
 scatter(xx(:,1), xx(:,2), R, C, 'filled'); hold on
-caxis([0 10])
+caxis([0 3])
 colorbar;
 axis([0 2048 0 2048]);
 grid on;
@@ -104,11 +104,23 @@ ax = gca;
 ax.YDir = 'reverse';
 ax.XAxisLocation = 'top'
 colorbar;
+hgexport(f1, set.lensDistortion_residuals_IMG,  ...
+     hgexport('factorystyle'), 'Format', 'png'); 
 
 % show distortion field
-figure;
 [x, y, i, j] = simulate_distortion_field(@undistort_rational_function, sol, image_size);
-visualize_vector_field(i, j, x, y);
+f = visualize_vector_field(i, j, x, y);
 axis([0 2048 0 2048]);
+hgexport(f, set.lensDistortion_field_IMG,  ...
+     hgexport('factorystyle'), 'Format', 'png'); 
+% 
+% %
+% [invA, maxErr] = inverse_rational_model(A, image_size)
+% 
+% 
+% figure;
+% [x, y, i, j] = simulate_distortion_field(@undistort_rational_function, [invA(1,:)'; invA(2,:)'; invA(3,:)'], image_size);
+% visualize_vector_field(i, j, x, y);
+% axis([0 2048 0 2048]);
 
 end

@@ -97,6 +97,15 @@ elseif strcmp(type, 'pointing_model')
 end
 
 
+% use only 360+/-5 deg and 180 +/- 5 deg measurments
+% valid = abs(angle'-180) < 5 | abs(angle'-360) < 5;
+% xx_corr = xx_corr(valid,:);
+% XX = XX(valid,:);
+% R = R(:,:,valid);
+% angle = angle(valid);
+% nb_points = nnz(valid);
+% R_sysErr = R_sysErr(:,:,valid);
+
 %% compute error
 for npoint = 1:nb_points 
     res_err(npoint,:) = stars2image_error( XX(npoint,:), xx_corr(npoint,:),  R_sysErr(:,:,npoint)*R(:,:,npoint), K);
@@ -104,11 +113,11 @@ end
 
 err = sqrt(sum(res_err.^2,2));
 
-figure;
+f = figure('units','normalized','outerposition',[0 0 1 1]);;
 C = err;
 R = 100*err / 10;
 scatter(xx(:,1), xx(:,2), R, C, 'filled'); hold on
-caxis([0 10])
+%caxis([0 0])
 colorbar;
 axis([0 2048 0 2048]);
 grid on;
@@ -116,8 +125,10 @@ ax = gca;
 ax.YDir = 'reverse';
 ax.XAxisLocation = 'top'
 colorbar;
+hgexport(f, sprintf('validate_%s.png', type),  ...
+     hgexport('factorystyle'), 'Format', 'png'); 
 
-avgErr = mean(err);
+ avgErr = mean(err);
 
 fprintf('Average error for %s is %d \n', type, avgErr);
     

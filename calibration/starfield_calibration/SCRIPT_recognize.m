@@ -22,7 +22,7 @@ nb_exp = height(expSummary);
 
 %-------------------------------------------------------------------------
 
-f = figure;
+%f = figure;
 for nexp = 1:nb_exp
     
     fprintf('%s...\n', expSummary.fname_exp{nexp});
@@ -48,7 +48,7 @@ for nexp = 1:nb_exp
        
     % parse output
     match_list = [];
-    figure(f);
+    %figure(f);
     
     if exist('work/2nd/tmp.corr', 'file') == 2
     

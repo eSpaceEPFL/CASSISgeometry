@@ -55,12 +55,12 @@ Q = [extrinsic.Q_1 extrinsic.Q_2 extrinsic.Q_3 extrinsic.Q_4];
 
 % prepare rotation matrix for speed
 for n = 1:height(starSummary)
-    idx = find(cassis_time2num(starSummary.time(n)) == cassis_time2num(extrinsic.time));
-    Qcur = quaternion(Q(idx,:));
+    idx(n) = find(cassis_time2num(starSummary.time(n)) == cassis_time2num(extrinsic.time));
+    Qcur = quaternion(Q(idx(n),:));
     R(:,:,n) = RotationMatrix(Qcur);
     
-    idx = find(cassis_time2num(starSummary.time(n)) == cassis_time2num(extrinsic.time));
-    angle(n) = rotCommands.angle(idx);
+    idx_ = find(cassis_time2num(starSummary.time(n)) == cassis_time2num(rotCommands.time));
+    angle(n) = rotCommands.angle(idx_);
 end
 
 % compute normalized coordinates
@@ -87,24 +87,25 @@ if single_sysErr_on
 else
     % 2 matrices
     q(:,1) = quaternion.rotationmatrix( eye(3) );
-    q(:,2) = quaternion.rotationmatrix( eye(3) );
+   % q(:,2) = quaternion.rotationmatrix( eye(3) );
     Q(:,1) = q(:,1).e';
-    Q(:,2) = q(:,2).e';
-    angleRef = [180 360];
+   % Q(:,2) = q(:,2).e';
+    angleRef = [0];
 end
 sol0 = Q_2vec(Q); 
 
 % use only 360+/-5 deg and 180 +/- 5 deg measurments
-valid = abs(angle'-360) < 5 | abs(angle'-180) < 5;
+valid = abs(angle'-0) < 1 | abs(angle'-360) < 1;
 xx_corr = xx_corr(valid,:);
 XX = XX(valid,:);
 R = R(:,:,valid);
 angle = angle(valid);
 nb_points = nnz(valid);
+idx = idx(valid);
 
 % solve
 fun = @(sol) clc_res(sol, K, xx_corr, XX, R, angle, angleRef );
-options = optimoptions('lsqnonlin', 'Algorithm',  'levenberg-marquardt', 'StepTolerance', 1e-6, 'Display', 'Iter',  'MaxIter', 30);
+options = optimoptions('lsqnonlin', 'Algorithm',  'levenberg-marquardt',  'StepTolerance', 1e-10, 'Display', 'Iter',  'MaxIter', 30);
 [sol, ~, res] = lsqnonlin(fun, sol0, [], [], options);
 res0 = clc_res(sol0, K, xx_corr, XX, R, angle, angleRef );
 Err0 = sqrt(sum(reshape(res0, nb_points, 2).^2,2));
@@ -117,12 +118,14 @@ fprintf('Average error with SPICE pointing before systematic error correction %d
 fprintf('Average error with SPICE pointing after systematic error correction %d \n', avgErr);
 
 if ~single_sysErr_on
-    [angle180, ~] = AngleAxis( quaternion( Q(:,1) ) );
-    [angle360, ~] = AngleAxis( quaternion( Q(:,2) ) );
+%    [angle180, ~] = AngleAxis( quaternion( Q(:,1) ) );
+    [angle360, ~] = AngleAxis( quaternion( Q(:,1) ) );
 
-    fprintf('For angle %d correction is %d degree \n', 180, 360-rad2deg(angle180));
+ %   fprintf('For angle %d correction is %d degree \n', 180, 360-rad2deg(angle180));
     fprintf('For angle %d correction is %d degree \n', 360, 360-rad2deg(angle360));
 end
+
+
 
 % save distortion matrix
 Q = Q';
@@ -131,9 +134,11 @@ sysRotErr = table(Q, angleRef);
 writetable(sysRotErr, set.sysRotErr);
 
 % show training residuals
-plot(angle, Err, '.b'); hold on;
-plot(angle, Err0,'.r');
+figure;
 
+plot(angle, Err0, 'x'); hold on;
+%plot(idx, Err, 'ro'); hold on;
+plot(angle, Err, 'b.'); hold on;
 
 end
 
@@ -150,7 +155,7 @@ function err = clc_res(sol, K, xx_corr, XX, R, angle, angleRef)
     
     for n = 1:nb_points
         
-       q = interp_q(angle(n), angleRef, qRef);
+       q = normalize( interp_q(angle(n), angleRef, qRef ));
        R_sysErr(:,:,n) = RotationMatrix( q );
        
     end
