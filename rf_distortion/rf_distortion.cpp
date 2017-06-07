@@ -11,13 +11,13 @@
 
  chi_row = [ i^2, i*j, j^2, i, j, 1]
 
- 	   A1_row * chi_row'
- x = -----------------
- 	   A3_row * chi_row'
+      	A1_row * chi_row'
+ x = 	-----------------
+ 	A3_row * chi_row'
 
- 	 A2_row * chi_row'
- y = -----------------
-     A3_row * chi_row'
+ 	A2_row * chi_row'
+ y =	-----------------
+     	A3_row * chi_row'
 
  From this equation it follows that for every distorted coordinates (i, j), there is a unique pair of
  undistorted coordinates (x, y). However, converse is not true. To find distorted coordinates from
@@ -128,6 +128,7 @@ void rf_distort_point(float &i, float &j, float x, float y,
         dchi_row/di = [2i  j  0   1 0 0]
         dchi_row/dj = [0   i  2j  0 1 0]
         **/
+	     
         float j11 = - ( ( 2*i*A1_row[0] + j*A1_row[1] + A1_row[3] ) - x_predict * ( 2*i*A3_row[0] + j*A3_row[1] + A3_row[3] ) ) / divider;
         float j12 = - ( ( i*A1_row[1] + 2*j*A1_row[2] + A1_row[4] ) - x_predict * ( i*A3_row[1] + 2*j*A3_row[2] + A3_row[4] ) ) / divider;
         float j21 = - ( ( 2*i*A2_row[0] + j*A2_row[1] + A2_row[3] ) - y_predict * ( 2*i*A3_row[0] + j*A3_row[1] + A3_row[3] ) ) / divider;
@@ -142,6 +143,7 @@ void rf_distort_point(float &i, float &j, float x, float y,
         inv(J)*F =  ------------------ * [ -J21  J11 ] [ F21 ] = [ -J21*F11 + J11*F21 ]
                     J11*J22 - J12*J21
         **/
+	     
         float di = - ( j22*f11 - j12*f21) / (j11*j22 - j12*j21);
         float dj = - (-j21*f11 + j11*f21) / (j11*j22 - j12*j21);
         i = i + di;
