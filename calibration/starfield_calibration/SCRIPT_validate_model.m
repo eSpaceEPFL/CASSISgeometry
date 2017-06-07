@@ -21,10 +21,10 @@ xx(:,2) = starSummary.y;
 nb_points = height(starSummary);
 
 %% read extirinsic
-if strcmp(type, 'initial_model') || strcmp(type, 'pointing_model')
+if  strcmp(type, 'pointing_model')
     % read SPICE 
     extrinsic = readtable(set.extrinsic0_spice); 
-elseif strcmp(type, 'camera_model')
+elseif strcmp(type, 'camera_model') || strcmp(type, 'initial_model')
     % read extrinsic estimated from images
     extrinsic = readtable(set.extrinsic_ba); 
 end
@@ -115,7 +115,7 @@ err = sqrt(sum(res_err.^2,2));
 
 f = figure('units','normalized','outerposition',[0 0 1 1]);;
 C = err;
-R = 100*err / 10;
+R = 1000*err / 10;
 scatter(xx(:,1), xx(:,2), R, C, 'filled'); hold on
 %caxis([0 0])
 colorbar;

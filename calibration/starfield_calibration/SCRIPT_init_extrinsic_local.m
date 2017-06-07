@@ -129,8 +129,8 @@ ax.XTickLabel =text_;
 hgexport(f, set.ange_vs_angel_diff_IMG,  ...
      hgexport('factorystyle'), 'Format', 'png');
  
-fprintf('Average error with SPICE parameters %d \n', mean(avgErr0));
-fprintf('Average error after updating angles for every image %d \n', mean(avgErr));
+fprintf('Average error with SPICE parameters %d \n', median(avgErr0));
+fprintf('Average error after updating angles for every image %d \n', median(avgErr));
     
 writetable(extrinsic0, set.extrinsic0_local);  
 
