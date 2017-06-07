@@ -1,17 +1,29 @@
 # CASSISgeometry
 Repository to store code and data relevent to the TGO CASSIS investigation 
 
-## /isis_scripts
-Contatins collection of scripts explore undistort and mapproject CaSSIS images.
+*  isis_scripts
+Collection of Python-ISIS scripts that reconstruct color *.cub images from data packages
 
-## /calibration
-Contatins collection of scripts that perform geometric calibration using starfield images.
+*  calibration
+Collection of scripts that perform geometric calibration
 
-## /rf_distortion
-Contains C++ function for distortion / undistortion of CaSSIS images
+** calibration/libraries
+Contains reusable functions and 3rd party libraries
 
-## /ik
-Contains current SPICE Instrument Kernel for CaSSIS with CaSSIS lens distortion model. 
+** calibrarion/distortion_model_selection
+Distortion model selection experiments
 
-## /docs
-Contains all calibration reports and relevant papers.
+** calibration/starfield_calibration
+Star-field based calibration experiments
+
+** calibration/perapsisorb_calibration
+Experiments with Mars images
+
+* rf_distortion
+C++ functions for distortion / undistortion of CaSSIS images
+
+* ik
+SPICE Instrument Kernel for CaSSIS with CaSSIS lens distortion model. 
+
+* docs
+Calibration reports and relevant papers
