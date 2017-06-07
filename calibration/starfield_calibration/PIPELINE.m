@@ -85,6 +85,7 @@ SCRIPT_init_lensDistortion(set);
 SCRIPT_init_extrinsic_spice(set);
 
 % find rotation commands using SPICE
+
 SCRIPT_find_rotCommand_spice(set);
 
 % improve extrinsics for each image individually 
@@ -94,6 +95,7 @@ SCRIPT_init_extrinsic_local(set);
 % bundle adjustment
 % repeat, delet outliers and repeat again until there are no outliers
  iter = 1;
+ sprintf('iteration %i',iter)
  while SCRIPT_bundle_adjustment(set,iter) > 0
      iter = iter + 1;
      pause(0.1);

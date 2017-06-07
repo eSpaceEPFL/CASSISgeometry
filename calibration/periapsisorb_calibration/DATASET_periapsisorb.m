@@ -8,7 +8,7 @@ function set = DATASET_periapsisorb(dataset_path, subset_name)
 	if( strcmp('periapsis_orbit09', subset_name) )
    
         subsetpath = [dataset_path '/CASSIS/aerobraking/161122_periapsis_orbit09'];
-    
+        
     elseif( strcmp('periapsis_orbit10', subset_name) )
    
         subsetpath = [dataset_path '/CASSIS/aerobraking/161126_periapsis_orbit10'];
@@ -29,7 +29,7 @@ function set = DATASET_periapsisorb(dataset_path, subset_name)
     set.level1 = [subsetpath '/level1'];    
     
     % kernel
-    set.spice = [dataset_path '/naif/ExoMars2016/kernels/mk/em16_ops_st.tm'];
+    set.spice = [dataset_path '/naif/ExoMars2016/kernels/mk/em16_ops.tm'];
         
     % ----------- output --------------
     
@@ -39,22 +39,36 @@ function set = DATASET_periapsisorb(dataset_path, subset_name)
     set.sequences = [subsetpath '/OUTPUT/sequences'];
     mkdir([subsetpath '/OUTPUT/'], 'sequences');
     
-    % combined frames
+    set.raw_subexp = [subsetpath '/OUTPUT/raw_subexp'];
+    mkdir([subsetpath '/OUTPUT/'], 'raw_subexp');
+    
     set.raw_exposures = [subsetpath '/OUTPUT/raw_exposures'];
     mkdir([subsetpath '/OUTPUT/'], 'raw_exposures');
     
+    set.undist_raw_exposures = [subsetpath '/OUTPUT/undist_raw_exposures'];
+    mkdir([subsetpath '/OUTPUT/'], 'undist_raw_exposures');
+    
+    set.mapProj_exposures = [subsetpath '/OUTPUT/mapProj_exposures'];
+    mkdir([subsetpath '/OUTPUT/'], 'mapProj_exposures');
+    
+    set.colorMosaic_undist = [subsetpath '/OUTPUT/colorMosaic_undist'];
+    mkdir([subsetpath '/OUTPUT/'], 'colorMosaic_undist');
+ 
+    set.colorMosaic_dist = [subsetpath '/OUTPUT/colorMosaic_dist'];
+    mkdir([subsetpath '/OUTPUT/'], 'colorMosaic_dist');
+ 
     % denoising
-    set.denoise_exposure = [subsetpath '/OUTPUT/denoise_exposures'];
-    mkdir([subsetpath '/OUTPUT/'],  'denoise_exposures');
+    %set.denoise_exposure = [subsetpath '/OUTPUT/denoise_exposures'];
+    %mkdir([subsetpath '/OUTPUT/'],  'denoise_exposures');
         
     % ----------- summaries -------------
 
     % final parameters
-    set.intrinsic_final = [subsetpath '/OUTPUT/intrinsic_final.csv'];
-    set.lensDistortion_final = [subsetpath '/OUTPUT/lensDistortion_final.csv'];
-    set.sysRotErr_final = [subsetpath '../../sysRotErr_final.csv'];
+    set.intrinsic_final = '../starfield_calibration/intrinsic_final.csv';
+    set.lensDistortion_final ='../starfield_calibration/lensDistortion_final.csv';
+    set.sysRotErr_final = '../starfield_calibration/sysRotErr_final.csv';
     
-    set.extrinsic_spice = [subsetpath '/OUTPUT/extrinsic0_spice.csv'];
+    set.extrinsic0_spice = [subsetpath '/OUTPUT/extrinsic0_spice.csv'];
     set.rotCommand = [subsetpath '/OUTPUT/rotCommand.csv'];
     
     % folder content summary
