@@ -3,7 +3,7 @@ function f= visualize_vector_field(x1, y1, x2, y2)
 % (x1,y1)->(x2,y2) with contour lines
 % x1, y1 - is [height x width] output of meshgrid function
 % x2, y2 - is vector or matrix
-f = figure('units','normalized','outerposition',[0 0 1 1]);
+f = figure;%figure('units','normalized','outerposition',[0 0 1 1]);
 u = x2(:) - x1(:);  % vector direction from ideal to distorted
 v = y2(:) - y1(:);
 quiver(x1(:), y1(:), u, v); hold on
