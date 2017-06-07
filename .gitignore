@@ -34,5 +34,6 @@
 # Temporal folders
 starfield_calibration/tmp
 starfield_calibration/mice
-starfield_calibration/work/1st
-starfield_calibration/work/2nd
+calibration/starfield_calibration/work
+
+
