@@ -30,7 +30,7 @@ tgocassis_colorMosaic.py $INPUT_PATH/seq8_PAN.lis $INPUT_PATH/seq8_PAN.lis $INPU
 isis2std red=$DATASET_PATH/OUTPUT_ISIS/mosaic/seq8_PAN_PAN_PAN.cub+1 green=$DATASET_PATH/OUTPUT_ISIS/mosaic/seq8_PAN_PAN_PAN.cub+2 blue=$DATASET_PATH/OUTPUT_ISIS/mosaic/seq8_PAN_PAN_PAN.cub+3 to=$DATASET_PATH/OUTPUT_ISIS/mosaic/seq8_PAN_PAN_PAN.tif mode=rgb format=tiff bittype=8bit 
 
 tgocassis_colorMosaic.py $INPUT_PATH/seq9_RED.lis $INPUT_PATH/seq9_NIR.lis $INPUT_PATH/seq9_BLU.lis $DATASET_PATH/OUTPUT_ISIS/mosaic/seq9_RED_NIR_BLU.cub
-isis2std red=$DATASET_PATH/OUTPUT_ISIS/mosaic/seq9_RED_NIR_BLU.cub+1 green=$DATASET_PATH/OUTPUT_ISIS/mosaic/seq9_RED_NIR_BLU.cub+2 blue=$DATASET_PATH/OUTPUT_ISIS/mosaic/seq9_RED_NIR_BLU.cub+3 to=$DATASET_PATH/OUTPUT_ISIS/mosaic/seq9.tif mode=rgb format=tiff bittype=8bit 
+isis2std red=$DATASET_PATH/OUTPUT_ISIS/mosaic/seq9_RED_NIR_BLU.cub+1 green=$DATASET_PATH/OUTPUT_ISIS/mosaic/seq9_RED_NIR_BLU.cub+2 blue=$DATASET_PATH/OUTPUT_ISIS/mosaic/seq9_RED_NIR_BLU.cub+3 to=$DATASET_PATH/OUTPUT_ISIS/mosaic/seq9_RED_NIR_BLU.tif mode=rgb format=tiff bittype=8bit 
 
 tgocassis_colorMosaic.py $INPUT_PATH/seq10_PAN.lis $INPUT_PATH/seq10_RED.lis $DATASE_PAT/level1/seq10_RED.lis $DATASET_PATH/OUTPUT_ISIS/mosaic/seq10_PAN_RED_RED.cub
 isis2std red=$DATASET_PATH/OUTPUT_ISIS/mosaic/seq10_PAN_RED_RED.cub+1 green=$DATASET_PATH/OUTPUT_ISIS/mosaic/seq10_PAN_RED_RED.cub+2 blue=$DATASET_PATH/OUTPUT_ISIS/mosaic/seq10_PAN_RED_RED.cub+3 to=$DATASET_PATH/OUTPUT_ISIS/mosaic/seq10_PAN_RED_RED.tif mode=rgb format=tiff bittype=8bit

@@ -12,11 +12,14 @@ A = [[-0.6106, -0.5445, -0.0015, 0.9998, 0.0002, 0];
 seq = setLensDistortion(seq, A);
 
 
-corrLensDist_on = false;
-virtualImage_on = true;
-adjustSubExp_on = true;
-[exp, mask] = seq.getExp( 1, corrLensDist_on, virtualImage_on, adjustSubExp_on );
-corrLensDist_on = true;
-[exp_corr, mask_corr] = seq.getExp( 1, corrLensDist_on, virtualImage_on, adjustSubExp_on );
+% corrLensDist_on = false;
+% virtualImage_on = true;
+% adjustSubExp_on = true;
+% [exp, mask] = seq.getExp( 1, corrLensDist_on, virtualImage_on, adjustSubExp_on );
+% corrLensDist_on = true;
+% [exp_corr, mask_corr] = seq.getExp( 1, corrLensDist_on, virtualImage_on, adjustSubExp_on );
 
+   
+[image_pano, mask_pano] = seq.getImage(2, corrLensDist_on);
+   
 %[framelet, mask] = seq.getFramelet(2, 2, correct_on);

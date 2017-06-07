@@ -68,7 +68,7 @@ mask = filter_outliers(xx, err, neighb, zscore_th);
 nb_outliers = nnz(~mask);
 weight = [mask'; mask'];
 
-f = figure('units','normalized','outerposition',[0 0 1 1]);
+f = figure;% figure('units','normalized','outerposition',[0 0 1 1]);
 C = err;
 R = 100*err / 10;
 scatter(xx(:,1), xx(:,2), R, C, 'filled'); hold on

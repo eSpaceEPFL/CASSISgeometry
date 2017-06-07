@@ -38,6 +38,7 @@ def main():
 
     print 'subexp: ', subexp.min(), subexp.max()
     print 'subexp_corr: ', subexp_corr.min(), subexp_corr.max()
+    imwrite('subexp.png', tgo.)
 
     tgo.write_subExp(subexp_corr, osubexp_fname)
 

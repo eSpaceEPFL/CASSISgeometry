@@ -33,6 +33,27 @@ for nset = 1:nb_sets
     
 end
 
+
+% Reporting and saving results show density stars in frame
+unique_time = unique( cassis_time2num(inlierStarSummary.time) ) ;
+nb_time = length(unique_time);
+text = {};
+f = figure('units','normalized','outerposition',[0 0 1 1]);
+for ntime = 1:nb_time
+    index = unique_time(ntime) == cassis_time2num(inlierStarSummary.time);
+    plot(inlierStarSummary.x(index), inlierStarSummary.y(index), 'o'); hold on;
+    text{ntime} = [cassis_num2time(unique_time(ntime)) ' : ' num2str(nnz(index)) ' stars']; 
+end
+ax = gca;
+ax.YDir = 'reverse';
+ax.XAxisLocation = 'top'
+axis([0 2048 0 2048]);
+legend(text,'Location', 'bestoutside');
+grid on;
+hgexport(f, set.inlierStarSummary,  ...
+     hgexport('factorystyle'), 'Format', 'png'); 
+
+
 writetable(expSummary, comb_set.exposuresSummary); 
 writetable(inlierStarSummary, comb_set.inlierStarSummary); 
 

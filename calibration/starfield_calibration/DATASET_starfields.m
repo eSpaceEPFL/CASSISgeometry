@@ -108,7 +108,7 @@ function set = DATASET_starfields(dataset_path, subset_name)
     
     % final parameters
     set.intrinsic_final = 'intrinsic_final.csv';
-    set.lensDistortion_final ='lensDistortion_final.csv';
+    set.lensDistortion_final ='lensCorr_final.csv';
     set.sysRotErr_final = 'sysRotErr_final.csv';
     
     % folder content summary
