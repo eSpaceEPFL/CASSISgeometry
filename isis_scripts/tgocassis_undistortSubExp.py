@@ -14,10 +14,10 @@ import matplotlib.pyplot as plt
 def main():
 
     if len(sys.argv) < 3:
-        print('tgocassis_undistortSubExp <isubexp.xml> <osubexp.dat> <Acorr2dist.xml>')
-        print('<isubexp.xml> input subexposure file \n' \
-              '<osubexp.dat> output subexposure file \n' \
-              '<A_corr2dist.xml> is output cube with mosaic')
+        print('tgocassis_undistortSubExp <input> <output> <Acorr2dist.csv>')
+        print('<input_framelet> input subexposure file \n' \
+              '<output_framelet> output subexposure file \n' \
+              '<A_corr2dist.xml> is correct2distorted rational matrix')
         sys.exit()
 
     isubexp_fname = sys.argv[1]
@@ -31,16 +31,16 @@ def main():
         print('failed to read file %s' % (Acorr2dist_fname))
         sys.exit()
 
-    subexp, info = tgo.read_subExp(isubexp_fname)
+    subexp, info = tgo.read_subExp(isubexp_fname + '.xml')
     (x0, y0) = (info['win_col0'], info['win_row0']) 
 
     subexp_corr, mask = tgo.undistort(subexp, x0, y0, Acorr2dist)
 
     print 'subexp: ', subexp.min(), subexp.max()
     print 'subexp_corr: ', subexp_corr.min(), subexp_corr.max()
-    imwrite('subexp.png', tgo.)
+  #  imwrite('subexp.png', tgo.)
 
-    tgo.write_subExp(subexp_corr, osubexp_fname)
+    tgo.write_subExp(subexp_corr, osubexp_fname + '.dat')
 
 
     return 1

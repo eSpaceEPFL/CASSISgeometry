@@ -9,7 +9,7 @@ def main():
        print('tgocassis_undistortSubExp_folder <ifolder.lis>  <ofolder.cub> <Acorr2dist>')
        print('<ifolder> is an input folder with cassis dat and xml files\n' \
              '<ofolder> is an output folder ' \
-             '<Acorr2dist.csv> is csv file with rational distoption matrix')
+             '<Acorr2dist.csv> is csv file with rational distortion matrix')
        sys.exit()
 
     ifolder = sys.argv[1]
@@ -24,7 +24,7 @@ def main():
     for file in filelist:
         print file
         nameWoExt, ext = os.path.splitext(os.path.basename(file))        
-        execStr = 'tgocassis_undistortSubExp.py %s  %s/%s.dat %s' % (file, ofolder, nameWoExt, Acorr2dist_fname)
+        execStr = 'tgocassis_undistortSubExp.py %s  %s/%s %s' % (file[:-4], ofolder, nameWoExt, Acorr2dist_fname)
         print 'Calling %s' % execStr
         os.system(execStr)
         shutil.copyfile(file, '%s/%s.xml' % (ofolder, nameWoExt))

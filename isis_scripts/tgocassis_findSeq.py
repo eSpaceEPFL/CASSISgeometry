@@ -15,6 +15,7 @@ def main():
     if len(sys.argv) < 2:
         print('tgocassis_findSeq <cassisFolder>')
         print('<cassisFolder> is a folder with CaSSIS files that we want to summarise\n')
+        print('For each band of each CaSSIS sequence found in the folder function makes text files subexposures list.\n')
         sys.exit()
 
     cassisFolder = sys.argv[1]
@@ -33,7 +34,8 @@ def main():
             if len(bandXmlFiles) > 0:
                 nBand = xmlFilesByBand.index(bandXmlFiles)
                 bandName = tgo.num2type_subExp(nBand)
-                tgo.write_lines_list('%s/seq%i_%s.lis' % (cassisFolder, nSeq, bandName), bandXmlFiles)
+                bandXmlFiles_woExt = [xmlFile[:-4] for xmlFile in bandXmlFiles]
+                tgo.write_lines_list('%s/seq%i_%s.lis' % (cassisFolder, nSeq, bandName), bandXmlFiles_woExt)
                 for file in bandXmlFiles: 
                     print('Sequence %i, band %i, file %s' % (nSeq, nBand, file))
 
