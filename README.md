@@ -29,7 +29,7 @@ Experiments with Mars images
 
 C++ functions for distortion / undistortion of CaSSIS images
 
-**/ik**
+**/kernels**
 
 SPICE Instrument Kernel for CaSSIS with CaSSIS lens distortion model. 
 
