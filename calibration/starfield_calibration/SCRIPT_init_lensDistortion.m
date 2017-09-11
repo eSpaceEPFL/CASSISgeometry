@@ -13,9 +13,9 @@ fprintf('Initializing lens distortion\n');
 %set = DATASET_starfields(dataset_path, dataset_name);
 
 %%
-A = [0 0 0 1 0 0; 0 0 0 0 1 0; 0 0 0 0 0 1]; % no distortion
-lensDistortion0 = table(A);
-writetable(lensDistortion0, set.lensDistortion0);  
+A_corr = [0 0 0 1 0 0; 0 0 0 0 1 0; 0 0 0 0 0 1]; % no distortion
+lensCorrection0 = table(A_corr);
+writetable(lensCorrection0, set.lensCorrection0);  
 
 end
 

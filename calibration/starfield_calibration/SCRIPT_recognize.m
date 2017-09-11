@@ -56,7 +56,7 @@ for nexp = 1:nb_exp
         tableData = fitsread('work/2nd/tmp.corr','binarytable');
         flux = tableData{12};
         x = tableData{1};
-        y = tableData{2}; 
+        y = 2048 - tableData{2}; % since we flipped image
         ra = tableData{7};
         dec = tableData{8};
         if length(flux) > 0 
