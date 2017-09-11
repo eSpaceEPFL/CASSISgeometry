@@ -156,8 +156,8 @@ classdef exposureSequence
 
           if virtualImage_on
                 
-              exp = flipud(exp);
-              mask = flipud(mask);
+              exp = (flipud(exp));
+              mask = (flipud(mask));
                        
           end
           

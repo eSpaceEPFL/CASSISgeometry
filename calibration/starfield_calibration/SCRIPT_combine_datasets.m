@@ -50,15 +50,12 @@ ax.XAxisLocation = 'top'
 axis([0 2048 0 2048]);
 legend(text,'Location', 'bestoutside');
 grid on;
-hgexport(f, set.inlierStarSummary,  ...
+hgexport(f, comb_set.inlierStarSummary,  ...
      hgexport('factorystyle'), 'Format', 'png'); 
 
 
 writetable(expSummary, comb_set.exposuresSummary); 
 writetable(inlierStarSummary, comb_set.inlierStarSummary); 
-
-
-
 
 
 end

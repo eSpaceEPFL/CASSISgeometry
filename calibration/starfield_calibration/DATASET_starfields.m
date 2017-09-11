@@ -80,7 +80,7 @@ function set = DATASET_starfields(dataset_path, subset_name)
 
     % factory parameters
     set.intrinsic0 = [subsetpath '/OUTPUT/intrinsic0.csv'];
-    set.lensDistortion0 = [subsetpath '/OUTPUT/lensDistortion0.csv'];
+    set.lensCorrection0 = [subsetpath '/OUTPUT/lensCorrection0.csv'];
     set.extrinsic0_spice = [subsetpath '/OUTPUT/extrinsic0_spice.csv'];
     
     % individual rotation angle tuning
@@ -103,13 +103,16 @@ function set = DATASET_starfields(dataset_path, subset_name)
     
     % lens distortion estimation
     set.lensDistortion = [subsetpath '/OUTPUT/lensDistortion.csv'];
-    set.lensDistortion_field_IMG = [subsetpath '/OUTPUT/lensDistortion_field.png'];
-    set.lensDistortion_residuals_IMG = [subsetpath '/OUTPUT/lensDistortion_residuals.png'];
-    
+    set.lensCorrection = [subsetpath '/OUTPUT/lensCorrection.csv'];
+    set.lensCorrection_field_IMG = [subsetpath '/OUTPUT/lensCorrection_field.png'];
+    set.lensCorrection_residuals_IMG = [subsetpath '/OUTPUT/lensCorrection_residuals.png'];
+        
     % final parameters
-    set.intrinsic_final = 'intrinsic_final.csv';
-    set.lensDistortion_final ='lensCorr_final.csv';
-    set.sysRotErr_final = 'sysRotErr_final.csv';
+    set.intrinsic_final = 'OUTPUT/intrinsic_final.csv';
+    set.lensCorrection_final ='OUTPUT/lensCorrection_final.csv';
+    set.lensDistortion_final ='OUTPUT/lensDistortion_final.csv';
+    set.sysRotErr_final = 'OUTPUT/sysRotErr_final.csv';
+    mkdir('OUTPUT');
     
     % folder content summary
     set.folderContent = [subsetpath '/OUTPUT/folderContent.csv']; 

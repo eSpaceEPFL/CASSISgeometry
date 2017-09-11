@@ -21,6 +21,7 @@ for n = 1:3
      
      % save exposures
      prm.adjust_subExp_on = false;
+     prm.virtualImage_on = true;         % save virtual image
      if strcmp(set_names{n}, 'commissioning_2')
          prm.skip_first_exp = 1; % only 3 exposures in every sequence in commissioning_2
      else
@@ -85,12 +86,10 @@ SCRIPT_init_lensDistortion(set);
 SCRIPT_init_extrinsic_spice(set);
 
 % find rotation commands using SPICE
-
 SCRIPT_find_rotCommand_spice(set);
 
 % improve extrinsics for each image individually 
 SCRIPT_init_extrinsic_local(set);
-
 
 % bundle adjustment
 % repeat, delet outliers and repeat again until there are no outliers
@@ -105,12 +104,14 @@ SCRIPT_init_extrinsic_local(set);
 SCRIPT_solve_distortion(set);
 
 % systematic rotation error estimation
-SCRIPT_solve_sysRotErr(set);
+%SCRIPT_solve_sysRotErr(set);
 
 % copy parameters
 copyfile(set.intrinsic_ba, set.intrinsic_final);
+copyfile(set.lensCorrection, set.lensCorrection_final);
 copyfile(set.lensDistortion, set.lensDistortion_final);
-copyfile(set.sysRotErr, set.sysRotErr_final);
+
+%copyfile(set.sysRotErr, set.sysRotErr_final);
 
 %% validation
 
@@ -124,6 +125,6 @@ err = SCRIPT_validate_model(set, 'camera_model');
 err = SCRIPT_validate_model(set, 'initial_model');
 
 % validate poining model 
-err = SCRIPT_validate_model(set, 'pointing_model');
+%err = SCRIPT_validate_model(set, 'pointing_model');
 
 diary off;

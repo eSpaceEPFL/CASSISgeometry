@@ -1,0 +1,536 @@
+KPL/IK
+
+CASSIS Instrument Kernel
+===============================================================================
+ 
+   This instrument kernel (I-kernel) contains the ExoMars-2016 Trace Gas
+   Orbiter (TGO) Colour and Stereo Surface Imaging System (CaSSIS) 
+   instrument optics, detector and field-of-view (FOV) parameters
+   definitions.
+
+
+Version and Date
+-------------------------------------------------------------------------------
+
+   Version 0.5 -- March 31, 2017 -- Jeannie Backer, USGS
+
+      Added keywords for distortion model.
+
+   Version 0.4 -- January 31, 2017 -- Marc Costa Sitja, ESAC/ESA
+                                      Antoine Pommerol, SPACE/UNIBE
+
+      Corrected CaSSIS Filters' (TGO_CASSIS_*) FoVs boresights and the
+      corresponding diagram for since the +Yfsa axis was flipped as
+      indicated in [6].
+
+   Version 0.3 -- September 8, 2016 -- Marc Costa Sitja, ESAC/ESA
+                                       Jorge Diaz del Rio, ODC Space
+
+      Corrected cross angle values for CaSSIS Filters' (TGO_CASSIS_*) FoVs
+      since they were full angle instead of half angle. 
+      Corrected minor text typos.
+
+   Version 0.2 -- August 2, 2016 -- Marc Costa Sitja, ESAC/ESA
+
+      Updated the NAIF IDs for CASSIS definitions.
+      Corrected all INS_*_FOV_REF_ANGLE from 1.333 deg (full-angle)
+      to 0.6665 (half-angle).
+      Corrected minor typos.
+
+      Preliminary version. Pending review by the CaSSIS instrument team.
+
+   Version 0.1 -- May 24, 2016 -- Jorge Diaz del Rio, ODC Space
+   
+      Improved FoV definition comments by adding reference to the instrument
+      name on the definitions section header.
+
+   Version 0.0 -- May 22, 2016 -- Jorge Diaz del Rio, ODC Space
+   
+      Preliminary version. Pending review by the TGO Science Operations and
+      CaSSIS instrument teams.
+
+
+References
+-------------------------------------------------------------------------------
+
+   1. ``Frames Required Reading''
+
+   2. ``Kernel Pool Required Reading''
+   
+   3. ``C-kernel Required Reading''
+
+   4. ExoMars-2016 Frames Definition Kernel (FK), latest version.
+   
+   5. ``Colour and Stereo Surface Imaging System - CaSSIS,'' experiment
+      overview: http://www.cassis.unibe.ch/instrument/experiment_overview
+
+   6. E-mail "Small update to JUICE SPICE kernels regarding NIM of PEP" from
+      Andre Galli (andre.galli@space.unibe.ch), 2017-01-31
+   
+
+Contact Information
+-------------------------------------------------------------------------------
+
+   If you have any questions regarding this file contact SPICE support at
+   ESAC:
+
+           Marc Costa Sitja
+           (+34) 91-8131-457
+           mcosta@sciops.esa.int, esa_spice@sciops.esa.int
+           
+   or SPICE support at IKI:
+   
+           Anton Ledkov
+           +7 (495) 333-12-66
+           aledkov@rssi.ru
+           
+   or NAIF at JPL:
+   
+           Boris Semenov
+           (818) 354-8136
+           Boris.Semenov@jpl.nasa.gov
+      
+     
+Implementation Notes
+------------------------------------------------------------------------------
+
+   Applications that need SPICE I-kernel data must ``load'' the I-kernel file,
+   normally during program initialization. The SPICE routine FURNSH loads a
+   kernel file into the pool as shown below.
+
+      CALL FURNSH ( 'frame_kernel_name' )    -- FORTRAN
+      furnsh_c ( "frame_kernel_name" );      -- C
+      cspice_furnsh, frame_kernel_name       -- IDL
+      cspice_furnsh( 'frame_kernel_name' )   -- MATLAB
+
+   Loading the kernel using the SPICELIB routine FURNSH causes the data
+   items and their associated values present in the kernel to become
+   associated with a data structure called the ``kernel pool''. 
+   
+   Once the file has been loaded, the SPICE routine GETFOV (getfov_c in
+   C, cspice_getfov in IDL and MATLAB) can be used to retrieve FOV
+   parameters for a given instrument or structure.
+   
+   The application program may obtain the value(s) for any other IK data
+   item using the SPICELIB routines GDPOOL, GIPOOL, GCPOOL (gdpool_c, gipool_c,
+   gcpool_c in C, cspice_gdpool, cspice_gipool, cspice_gcpool in IDL and
+   MATLAB). See [2] for details.
+
+   This file was created with, and can be updated with a text editor or
+   word processor.
+
+   
+Naming Conventions and Conventions for Specifying Data
+----------------------------------------------------------------------------
+
+   Data items are specified using ``keyword=value'' assignments [2].
+   All keywords referencing values in this I-kernel start with the
+   characters `INS' followed by the NAIF TGO instrument ID code,
+   constructed using the spacecraft ID number (-143) followed by the
+   NAIF three digit ID number for CaSSIS module. These IDs are
+   defined in [4] as follows:
+   
+      Name                         NAIF ID
+     ---------------------        ---------
+      TGO_CASSIS                   -143400
+      TGO_CASSIS_PAN               -143421
+      TGO_CASSIS_RED               -143422
+      TGO_CASSIS_NIR               -143423
+      TGO_CASSIS_BLU               -143424
+
+
+   The remainder of the keyword name is an underscore character
+   followed by the unique name of the data item. For example, the
+   CaSSIS camera boresight direction in the TGO_CASSIS frame is
+   specified by:
+
+           INS-143400_BORESIGHT
+
+
+   The upper bound on the length of the name of any data item is 32
+   characters.
+
+   If the same item is included in more than one file, or if the same
+   item appears more than once within a single file, the latest value
+   supersedes any earlier values.
+
+
+Instrument Description
+----------------------------------------------------------------------------
+
+   CaSSIS (Colour and Stereo Surface Imaging System) is a high resolution
+   imaging system designed to complement the data acquired by the other
+   payload on the ExoMars-2016 TGO. The instrument comprises a number of
+   sub-elements (see [5]):
+
+   Telescope:
+   ----------
+   
+      The CaSSIS telescope was originally conceived as a three-mirror
+      anastigmat system (off-axis) with a fold mirror. The absence of a
+      central obscuration reduces the straylight by allowing simplified
+      baffling. The primary mirror is around 13.5 cm in diameter. The
+      mirrors are held in a carbon fiber reinforced polymer (CFRP)
+      structure. The focal plane will comprise a single silicon hybrid
+      detector with 4 colour filters mounted on it following the push-frame
+      technique.
+      
+   Focal Plane System:
+   -------------------
+   
+      The system is based upon a Raytheon Osprey 2048x2048 hybrid CMOS
+      detector. The detector can be read-out extremely quickly with 14
+      bit digital resolution. However, it remains a framing device
+      meaning that acquiring an un-smeared image along a rapidly moving
+      ground-track requires short exposures and a rapid imaging sequence.
+      The along-track dimension of the image is then built up and put
+      together on ground.
+
+      To avoid mechanisms the detector is covered with a single monolithic
+      rad-hard fused silica substrate with filters deposited on it.
+      Different coatings with different transmission properties cover the
+      substrate to produce the CaSSIS Filter Strip Assembly (FSA). The
+      transmissions are relatively broad because of signal to noise
+      considerations. Between the filters are small dark bands needed
+      to reduce spectral cross-talk.
+      
+   Rotation mechanism:
+   -------------------
+   
+      The telescope and focal plane are mounted on a rotation mechanism. This
+      solves two key problems. Firstly, the rotation of the spacecraft about
+      the nadir direction can be compensated for. Prior to image acquisition,
+      the imager can be rotated so that the lines are orthogonal to the
+      direction of motion. (In case of rotation mechanism failure, the
+      system would be able to acquire data but at reduced resolution and lower
+      signal to noise) Secondly, the rotation mechanism can be swiveled by
+      ~180 degrees to acquire a stereo image. Hence, the imager has been
+      designed to look 10 degrees ahead of the spacecraft for the first image
+      and 10 degrees behind to acquire the stereo pair. The time necessary to
+      complete the rotation drives the design of the rotation mechanism.
+      
+      The rotation mechanism consists of a hollow shaft supported by two
+      ceramic bearings and driven by a worm gear, whereby the worm wheel is
+      integral part of the hollow shaft. The reduction ratio is ca. 200:1.
+
+      High-strength titanium alloys are used for the gear component, which
+      are hard coated to provide durability. The housing is made of AlBeMet.
+      A stepper motor (modified Port Escap P430) is connected to the worm 
+      shaft via a bellow coupling. End switches are used for zeroing; backlash
+      is compensated by software and is calibrated in-flight.
+
+      A cable management system (the twist capsule) has been implemented to
+      support cables which go from the rotating part of the instrument to
+      fixed electronics box.
+      
+      
+   The following table provides the CaSSIS camera main parameters:
+   
+      --------------------------------------------------
+       Parameter                           Value
+      ---------------------------------  ---------------
+       Focal length, mm                    880.0
+       
+       Aperture diameter, mm               135.0
+       
+       Nominal F#                            6.52
+       
+       Pixel size, microns                 10.00x10.00
+       
+       FoV, degrees
+          Full                              1.333x1.333
+          Used                              1.333x0.888
+       
+       IFOV, micro-radians                 11.36x11.36
+       
+       Time between stereo images, s       46.91
+       
+       Bits/px                             14
+       
+       Detector size, px                   2048x2048
+       
+       Image size, px                      2048x256
+       
+       #images/exposure                    4
+       
+       Filter center wavelength/bw, nm
+          PAN                              675/250   
+          Blue-Green                       485/165
+          Red                              840/100
+          IR                               985/220
+      -------------------------------------------------   
+       
+       
+Mounting Alignment
+----------------------------------------------------------------------------
+
+   Refer to the latest version of the ExoMars-2016 Frames Definition
+   Kernel (FK) [4] for the CaSSIS reference frame definitions and mounting
+   alignment information.
+  
+   
+CaSSIS Camera and Filters Apparent Field-of-View Layouts
+----------------------------------------------------------------------------
+
+   This diagram illustrates the CaSSIS Camera and Filters apparent FOV
+   layouts in the CaSSIS Filter Strip Assembly (TGO_CASSIS_FSA) reference
+   frame.
+
+
+              (1,1)                                 (1,2048)
+                .-------------------------------------.      ------------
+                |                                     |              ^
+                :=====================================: 354          |
+                :               PAN Filter            :              |
+                :=====================================: 633          |
+                |                                     |              |
+                :=====================================: 712          |
+                :               RED Filter            :              |
+                :=====================================: 967          |
+        <--------------------------o                  |         1.3330 deg
+      +Xfsa     :==================|==================:1048          |
+                :               NIR Filter            :              |
+                :==================|==================:1303          |
+                |                  |                  |              |
+                :==================|==================:1389          |
+                :               BLU Filter            :              |
+                :==================|==================:1644          |
+                |                  |                  |              v
+                '------------------|------------------'      ------------
+           (2048,1)                v             (2048,2048)
+                                     +Yfsa
+                |                                     |
+                |<----------------------------------->|
+                |                1.3330 deg           |
+
+         
+   The Filters FoV angles are as follows:
+   
+      ------------------------------------------------------------------------
+       Filter     Size (Px)     Bsight offset,px(deg)      FoV dim (x,y)
+      --------   -----------   ------------------------   --------------------
+       PAN         2048x280     -523px (-0.340410 deg)     1.3330x0.18225 deg
+       RED         2048x256     -186px (-0.121060 deg)     1.3330x0.16663 deg
+       NIR         2048x256     +151px (+0.098283 deg)     1.3330x0.16663 deg
+       BLU         2048x256     +492px (+0.32023  deg)     1.3330x0.16663 deg
+      ------------------------------------------------------------------------
+
+
+FOV Definition
+---------------------------------------------------------------------------
+
+   This section contains assignments defining the CaSSIS camera and its
+   filters FOVs. These definitions are based on the camera parameters
+   provided in the previous sections and are provided in a format
+   consistent with/required by the SPICE TOOLKIT function GETFOV.
+   
+
+   CaSSIS Full (TGO_CASSIS) FoV:
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   The CaSSIS FOV is defined as a square pyramid with a full angle of
+   1.333 degrees. It is defined with respect to the TGO_CASSIS_FSA
+   frame. The boresight and the cross-reference vectors are unit along
+   the +Z axis and the +X axis of the frame, respectively.
+
+   Please note that the FOV reference and cross angles are defined with half 
+   angle values. 
+   
+  \begindata
+
+         INS-143400_FOV_FRAME                 = 'TGO_CASSIS_FSA'
+         INS-143400_FOV_SHAPE                 = 'RECTANGLE'
+         INS-143400_BORESIGHT                 = (
+                        0.000000       0.000000     1.000000
+                                                )
+         INS-143400_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-143400_FOV_REF_VECTOR            = (
+                        1.000000       0.000000     0.000000
+                                                )
+         INS-143400_FOV_REF_ANGLE             = (   0.666500 )
+         INS-143400_FOV_CROSS_ANGLE           = (   0.666500 )
+         INS-143400_FOV_ANGLE_UNITS           = 'DEGREES'
+
+  \begintext
+
+
+   CaSSIS Filters' (TGO_CASSIS_*) FoVs:
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   The CaSSIS Filters (PAN, RED, NIR, BLU) FOVs are defined as rectangular
+   pyramids with respect to the TGO_CASSIS_FSA frame. The full-angle along
+   the cross-reference vector is the same for all filters and corresponds
+   to the full CaSSIS Field-of-View in that direction, 1.333000 degrees.
+   On the +Y direction, the Field-of-View is defined by the filter's
+   size in pixels. See the ``CaSSIS Camera and Filters Apparent Field-of-View
+   Layouts'' for further information.
+   
+   The boresight of each filter is defined by the direction of the center
+   pixel of the given filter. Based on the offset in pixels (given in
+   the ``CaSSIS Camera and Filters Apparent Field-of-View Layouts'' section),
+   the required rotation angle, along the +X TGO_CASSIS_FSA axis is
+   computed, from which the filter's boresight is obtained:
+   
+       Filter    NAIF ID     Angle, deg    Bsight (x,y,z) in TGO_CASSIS_FSA
+      --------   -------   ------------   ----------------------------------
+       PAN      -143421      +0.320230     ( 0.00000, -0.00559,  0.99998 )
+       RED      -143422      +0.098283     ( 0.00000, -0.00172,  0.99999 )
+       NIR      -143423      -0.121060     ( 0.00000,  0.00211,  0.99999 )
+       BLU      -143424      -0.340410     ( 0.00000,  0.00594,  0.99998 )     
+  
+   Please note that the FOV reference and cross angles are defined with half 
+   angle values. 
+
+  \begindata
+
+         INS-143421_FOV_FRAME                 = 'TGO_CASSIS_FSA'
+         INS-143421_FOV_SHAPE                 = 'RECTANGLE'
+         INS-143421_BORESIGHT                 = (
+                        0.000000      -0.005589090900979     0.999984380909472
+                                                )
+         INS-143421_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-143421_FOV_REF_VECTOR            = (
+                        1.000000       0.000000     0.000000
+                                                )
+         INS-143421_FOV_REF_ANGLE             = (   0.666500000000000 )
+         INS-143421_FOV_CROSS_ANGLE           = (   0.091123207737606 )
+         INS-143421_FOV_ANGLE_UNITS           = 'DEGREES'
+         
+         
+         INS-143422_FOV_FRAME                 = 'TGO_CASSIS_FSA'
+         INS-143422_FOV_SHAPE                 = 'RECTANGLE'
+         INS-143422_BORESIGHT                 = (
+                        0.000000      -0.001715359158770     0.999998528770396
+                                                )
+         INS-143422_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-143422_FOV_REF_VECTOR            = (
+                        1.000000       0.000000     0.000000
+                                                )
+         INS-143422_FOV_REF_ANGLE             = (   0.666500000000000 )
+         INS-143422_FOV_CROSS_ANGLE           = (   0.083312647074382 )
+         INS-143422_FOV_ANGLE_UNITS           = 'DEGREES'
+
+
+         INS-143423_FOV_FRAME                 = 'TGO_CASSIS_FSA'
+         INS-143423_FOV_SHAPE                 = 'RECTANGLE'
+         INS-143423_BORESIGHT                 = (
+                        0.000000       0.002112958427747     0.999997767700850
+                                                )
+         INS-143423_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-143423_FOV_REF_VECTOR            = (
+                        1.000000       0.000000     0.000000
+                                                )
+         INS-143423_FOV_REF_ANGLE             = (   0.666500000000000 )
+         INS-143423_FOV_CROSS_ANGLE           = (   0.083312647074382 )
+         INS-143423_FOV_ANGLE_UNITS           = 'DEGREES'
+         
+         
+         INS-143424_FOV_FRAME                 = 'TGO_CASSIS_FSA'
+         INS-143424_FOV_SHAPE                 = 'RECTANGLE'
+         INS-143424_BORESIGHT                 = (
+                        0.000000      0.005941245046711      0.999982350647898
+                                                )
+         INS-143424_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-143424_FOV_REF_VECTOR            = (
+                        1.000000       0.000000     0.000000
+                                                )
+         INS-143424_FOV_REF_ANGLE             = (   0.666500000000000 )
+         INS-143424_FOV_CROSS_ANGLE           = (   0.083312647074382 )
+         INS-143424_FOV_ANGLE_UNITS           = 'DEGREES'
+
+  \begintext
+
+
+Optical Distortion
+--------------------------------------------------------
+ Rational correction model is described by following equation
+
+ ij_fp_chi = [ i_fp^2, i_fp*j_fp, j_fp^2, i_fp, j_fp, 1]
+
+          A_corr_1 * ij_fp_chi'
+ x_fp =  ----------------------
+          A_corr_3 * ij_fp_chi'
+
+          A_corr_2 * ij_fp_chi'
+ y_fp =  ----------------------
+          A_corr_3 * ij_fp_chi'
+
+ where (i_fp, j_fp) are distorted focal plane coordinates in millimeters
+       (x_fp, y_fp) are ideal focal plane coordinates in millimeters
+       A_corr_1, A_corr_2, A_corr_3 are 1x6 vectors, parameters of the rational correction model
+
+ \begindata
+         INS-143400_OC_A1 = ( 0.00376130530948266,
+                             -0.0134154156065812,
+                             -1.86749521007237e-05,
+                              1.00021352681836,
+                             -0.000432362371703953,
+                             -0.000948065735350123 )
+         INS-143400_OC_A2 = ( 9.9842559363676e-05,
+                              0.00373543707958162,
+                             -0.0133299918873929,
+                             -0.000215311328389359,
+                              0.995296015537294,
+                             -0.0183542717710778 )
+         INS-143400_OC_A3 = ( -3.13320167004204e-05,
+                              -7.35655125749807e-06,
+                              -1.57664245066771e-05,
+                               0.00373549465439151,
+                              -0.0141671946930935,
+                               1.0 )
+ \begintext
+
+Rational distortion model is described by following equation
+
+ xy_fp_chi = [ x_fp^2, x_fp*y_fp, y_fp^2, x_fp, y_fp, 1]
+
+          A_dist_1 * xy_fp_chi'
+ i_fp =  ----------------------
+          A_dist_3 * xy_fp_chi'
+
+          A_dist_2 * xy_fp_chi'
+ j_fp =  ----------------------
+          A_dist_3 * xy_fp_chi'
+
+ where (i_fp, j_fp) are distorted focal plane coordinates in millimeters
+       (x_fp, y_fp) are ideal focal plane coordinates in millimeters
+       A_dist_1, A_dist_2, A_dist_3 are 1x6 vectors, parameters of the rational distortion model
+
+ \begindata
+         INS-143400_OD_A1 = ( 0.00213658795560622,
+                             -0.00711785765064197,
+                              1.10355974742147e-05,
+                              0.573607182625377,
+                              0.000250884350194894,
+                              0.000550623913037132 )
+         INS-143400_OD_A2 = ( -5.69725741015406e-05,
+                               0.00215155905679149,
+                              -0.00716392991767185,
+                               0.000124152787728634,
+                               0.576459544392426,
+                               0.010576940564854 )
+         INS-143400_O_A3 = ( 1.78250771483506e-05,
+                             4.24592743471094e-06,
+                             9.51220699036653e-06,
+                             0.00215158425420738,
+                            -0.0066835595774833,
+                             0.573741540971609 )
+ \begintext
+
+Platform ID
+---------------------------------------------------------------------------
+
+   This number is the NAIF instrument ID of the platform on which the
+   instrument mounted. For all CaSSIS components it is the spacecraft.
+
+  \begindata
+
+         INS-143421_PLATFORM_ID  = ( -143000 )
+         INS-143422_PLATFORM_ID  = ( -143000 )
+         INS-143423_PLATFORM_ID  = ( -143000 )
+         INS-143424_PLATFORM_ID  = ( -143000 )
+
+  \begintext
+
+
+End of IK file.

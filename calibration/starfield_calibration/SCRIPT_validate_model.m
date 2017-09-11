@@ -53,20 +53,20 @@ K = f_x0_y0_2K(f, x0, y0, pixSize);
 %% read lens distortion model
 if strcmp(type, 'initial_model') 
     % read factory model
-    lensDistortion = readtable(set.lensDistortion0);
+    lensCorrection = readtable(set.lensCorrection0);
 elseif    strcmp(type, 'pointing_model') || strcmp(type, 'camera_model')
     % read final model 
-    lensDistortion = readtable(set.lensDistortion_final);
+    lensCorrection = readtable(set.lensCorrection_final);
 end
-A = [lensDistortion.A_1 lensDistortion.A_2 lensDistortion.A_3 lensDistortion.A_4 lensDistortion.A_5 lensDistortion.A_6];
+A_corr = [lensCorrection.A_corr_1 lensCorrection.A_corr_2 lensCorrection.A_corr_3 lensCorrection.A_corr_4 lensCorrection.A_corr_5 lensCorrection.A_corr_6];
 
-xx_norm = pixel2norm(xx, image_size);
+[xx_norm(:,1), xx_norm(:,2)] = cassis_detector2focalplane(xx(:,1), xx(:,2), image_size(2), image_size(1), pixSize*1000);
 chi = lift2D_to_6D(xx_norm); 
-xx_corr_norm = chi*A';
+xx_corr_norm = chi*A_corr';
 xx_corr_norm(:,1) = xx_corr_norm(:,1)./xx_corr_norm(:,3);
 xx_corr_norm(:,2) = xx_corr_norm(:,2)./xx_corr_norm(:,3);
 xx_corr_norm = xx_corr_norm(:,[1 2]);
-xx_corr = norm2pixel(xx_corr_norm, image_size);
+[xx_corr(:,1), xx_corr(:,2)] = cassis_focalplane2detector(xx_corr_norm(:,1), xx_corr_norm(:,2), image_size(2), image_size(1), pixSize*1000);
 
 %% read rotation commands
 rotCommands = readtable(set.rotCommand);
@@ -125,8 +125,8 @@ ax = gca;
 ax.YDir = 'reverse';
 ax.XAxisLocation = 'top'
 colorbar;
-hgexport(f, sprintf('validate_%s.png', type),  ...
-     hgexport('factorystyle'), 'Format', 'png'); 
+%hgexport(f, sprintf('validate_%s.png', type),  ...
+%     hgexport('factorystyle'), 'Format', 'png'); 
 
  avgErr = mean(err);
 
