@@ -1,6 +1,6 @@
 KPL/IK
 
-NOMAD Instrument Kernel
+CASSIS Instrument Kernel
 ===============================================================================
  
    This instrument kernel (I-kernel) contains the ExoMars-2016 Trace Gas
@@ -12,13 +12,37 @@ NOMAD Instrument Kernel
 Version and Date
 -------------------------------------------------------------------------------
 
+   Version 0.5 -- March 31, 2017 -- Jeannie Backer, USGS
+
+      Added keywords for distortion model.
+
+   Version 0.4 -- January 31, 2017 -- Marc Costa Sitja, ESAC/ESA
+                                      Antoine Pommerol, SPACE/UNIBE
+
+      Corrected CaSSIS Filters' (TGO_CASSIS_*) FoVs boresights and the
+      corresponding diagram for since the +Yfsa axis was flipped as
+      indicated in [6].
+
+   Version 0.3 -- September 8, 2016 -- Marc Costa Sitja, ESAC/ESA
+                                       Jorge Diaz del Rio, ODC Space
+
+      Corrected cross angle values for CaSSIS Filters' (TGO_CASSIS_*) FoVs
+      since they were full angle instead of half angle. 
+      Corrected minor text typos.
+
+   Version 0.2 -- August 2, 2016 -- Marc Costa Sitja, ESAC/ESA
+
+      Updated the NAIF IDs for CASSIS definitions.
+      Corrected all INS_*_FOV_REF_ANGLE from 1.333 deg (full-angle)
+      to 0.6665 (half-angle).
+      Corrected minor typos.
+
+      Preliminary version. Pending review by the CaSSIS instrument team.
+
    Version 0.1 -- May 24, 2016 -- Jorge Diaz del Rio, ODC Space
    
       Improved FoV definition comments by adding reference to the instrument
       name on the definitions section header.
-   
-      Preliminary version. Pending review by the CaSSIS instrument team.
-
 
    Version 0.0 -- May 22, 2016 -- Jorge Diaz del Rio, ODC Space
    
@@ -39,9 +63,10 @@ References
    
    5. ``Colour and Stereo Surface Imaging System - CaSSIS,'' experiment
       overview: http://www.cassis.unibe.ch/instrument/experiment_overview
+
+   6. E-mail "Small update to JUICE SPICE kernels regarding NIM of PEP" from
+      Andre Galli (andre.galli@space.unibe.ch), 2017-01-31
    
-   6. ``A Rational Function Lens Distortion Model for General Cameras'', 
-      David Claus and Andrew W.Fitzgibbon, CVPR 2005 
 
 Contact Information
 -------------------------------------------------------------------------------
@@ -64,12 +89,6 @@ Contact Information
            Boris Semenov
            (818) 354-8136
            Boris.Semenov@jpl.nasa.gov
-   
-   or eSpace at EPFL:
-   
-           Stepan Tulyakov
-           (+41) 786-407-131 
-           stepan.tulyakov@epfl.ch
       
      
 Implementation Notes
@@ -114,10 +133,10 @@ Naming Conventions and Conventions for Specifying Data
       Name                         NAIF ID
      ---------------------        ---------
       TGO_CASSIS                   -143400
-      TGO_CASSIS_PAN               -143410
-      TGO_CASSIS_RED               -143420
-      TGO_CASSIS_NIR               -143430
-      TGO_CASSIS_BLU               -143440
+      TGO_CASSIS_PAN               -143421
+      TGO_CASSIS_RED               -143422
+      TGO_CASSIS_NIR               -143423
+      TGO_CASSIS_BLU               -143424
 
 
    The remainder of the keyword name is an underscore character
@@ -210,10 +229,8 @@ Instrument Description
       --------------------------------------------------
        Parameter                           Value
       ---------------------------------  ---------------
-       Focal length, mm                    875.2
+       Focal length, mm                    880.0
        
-       Principal point, px                 (1023, 1023)
-
        Aperture diameter, mm               135.0
        
        Nominal F#                            6.52
@@ -252,54 +269,50 @@ Mounting Alignment
    alignment information.
   
    
-CaSSIS Camera and Filters Apparent Fiel-of-View Layouts
+CaSSIS Camera and Filters Apparent Field-of-View Layouts
 ----------------------------------------------------------------------------
 
    This diagram illustrates the CaSSIS Camera and Filters apparent FOV
    layouts in the CaSSIS Filter Strip Assembly (TGO_CASSIS_FSA) reference
    frame.
-   
-   
-                            ^ +Yfsa
-                            |
-                            |   
-       (1,1)                |                (1,2048)
-         .------------------|------------------.      ----------------------
-         |                  |                  |                        ^   
-         :==================|==================: 354                    |
-         :               PAN Filter            :                        |
-         :==================|==================: 633                    |
-         |                  |                  |                        |
-         :==================|==================: 712                    |
-         :               RED Filter            :                        |
-         :==================|==================: 967                    |
-         |                  o------------------------->           1.3330 deg
-         :=====================================:1048   +Xfsa            |
-         :               NIR Filter            :                        |
-         :=====================================:1303                    |
-         |                                     |                        |
-         :=====================================:1389                    |
-         :               BLU Filter            :                        |
-         :=====================================:1644                    |
-         |                                     |                        v
-         '-------------------------------------'      ----------------------
-    (2048,1)                              (2048,2048)
-         
-         |                                     |
-         |<----------------------------------->|
-         |                1.3330 deg           |
-         
-         
+
+
+              (1,1)                                 (1,2048)
+                .-------------------------------------.      ------------
+                |                                     |              ^
+                :=====================================: 354          |
+                :               PAN Filter            :              |
+                :=====================================: 633          |
+                |                                     |              |
+                :=====================================: 712          |
+                :               RED Filter            :              |
+                :=====================================: 967          |
+        <--------------------------o                  |         1.3330 deg
+      +Xfsa     :==================|==================:1048          |
+                :               NIR Filter            :              |
+                :==================|==================:1303          |
+                |                  |                  |              |
+                :==================|==================:1389          |
+                :               BLU Filter            :              |
+                :==================|==================:1644          |
+                |                  |                  |              v
+                '------------------|------------------'      ------------
+           (2048,1)                v             (2048,2048)
+                                     +Yfsa
+                |                                     |
+                |<----------------------------------->|
+                |                1.3330 deg           |
+
          
    The Filters FoV angles are as follows:
    
       ------------------------------------------------------------------------
        Filter     Size (Px)     Bsight offset,px(deg)      FoV dim (x,y)
       --------   -----------   ------------------------   --------------------
-       PAN         2048x279     -523px (-0.340410 deg)     1.3330x0.18225 deg
-       RED         2048x255     -186px (-0.121060 deg)     1.3330x0.16663 deg
-       NIR         2048x255     +151px (+0.098283 deg)     1.3330x0.16663 deg
-       BLU         2048x255     +492px (+0.32023  deg)     1.3330x0.16663 deg
+       PAN         2048x280     -523px (-0.340410 deg)     1.3330x0.18225 deg
+       RED         2048x256     -186px (-0.121060 deg)     1.3330x0.16663 deg
+       NIR         2048x256     +151px (+0.098283 deg)     1.3330x0.16663 deg
+       BLU         2048x256     +492px (+0.32023  deg)     1.3330x0.16663 deg
       ------------------------------------------------------------------------
 
 
@@ -311,14 +324,17 @@ FOV Definition
    provided in the previous sections and are provided in a format
    consistent with/required by the SPICE TOOLKIT function GETFOV.
    
+
    CaSSIS Full (TGO_CASSIS) FoV:
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   The CaSSIS FOV is defined as a square pyramid with a half angle of
+   The CaSSIS FOV is defined as a square pyramid with a full angle of
    1.333 degrees. It is defined with respect to the TGO_CASSIS_FSA
    frame. The boresight and the cross-reference vectors are unit along
    the +Z axis and the +X axis of the frame, respectively.
 
+   Please note that the FOV reference and cross angles are defined with half 
+   angle values. 
    
   \begindata
 
@@ -331,8 +347,8 @@ FOV Definition
          INS-143400_FOV_REF_VECTOR            = (
                         1.000000       0.000000     0.000000
                                                 )
-         INS-143400_FOV_REF_ANGLE             = (   1.333000 )
-         INS-143400_FOV_CROSS_ANGLE           = (   1.333000 )
+         INS-143400_FOV_REF_ANGLE             = (   0.666500 )
+         INS-143400_FOV_CROSS_ANGLE           = (   0.666500 )
          INS-143400_FOV_ANGLE_UNITS           = 'DEGREES'
 
   \begintext
@@ -342,111 +358,164 @@ FOV Definition
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    The CaSSIS Filters (PAN, RED, NIR, BLU) FOVs are defined as rectangular
-   pyramids with respect to the TGO_CASSIS_FSA frame. The half-angle along
+   pyramids with respect to the TGO_CASSIS_FSA frame. The full-angle along
    the cross-reference vector is the same for all filters and corresponds
    to the full CaSSIS Field-of-View in that direction, 1.333000 degrees.
    On the +Y direction, the Field-of-View is defined by the filter's
-   size in pixels. See the ``CaSSIS Camera and Filters Apparent Fiel-of-View
+   size in pixels. See the ``CaSSIS Camera and Filters Apparent Field-of-View
    Layouts'' for further information.
    
    The boresight of each filter is defined by the direction of the center
    pixel of the given filter. Based on the offset in pixels (given in
-   the `CaSSIS Camera and Filters Apparent Fiel-of-View Layouts'' section),
+   the ``CaSSIS Camera and Filters Apparent Field-of-View Layouts'' section),
    the required rotation angle, along the +X TGO_CASSIS_FSA axis is
    computed, from which the filter's boresight is obtained:
    
        Filter    NAIF ID     Angle, deg    Bsight (x,y,z) in TGO_CASSIS_FSA
       --------   -------   ------------   ----------------------------------
-       PAN      -143410      -0.340410     ( 0.00000,  0.00594,  0.99998 )
-       RED      -143420      -0.121060     ( 0.00000,  0.00211,  0.99999 )
-       NIR      -143430      +0.098283     ( 0.00000, -0.00172,  0.99999 )
-       BLU      -143440      +0.320230     ( 0.00000, -0.00559,  0.99998 )
-   
+       PAN      -143421      +0.320230     ( 0.00000, -0.00559,  0.99998 )
+       RED      -143422      +0.098283     ( 0.00000, -0.00172,  0.99999 )
+       NIR      -143423      -0.121060     ( 0.00000,  0.00211,  0.99999 )
+       BLU      -143424      -0.340410     ( 0.00000,  0.00594,  0.99998 )     
+  
+   Please note that the FOV reference and cross angles are defined with half 
+   angle values. 
+
   \begindata
 
-         INS-143410_FOV_FRAME                 = 'TGO_CASSIS_FSA'
-         INS-143410_FOV_SHAPE                 = 'RECTANGLE'
-         INS-143410_BORESIGHT                 = (
-                        0.000000      0.005941245046711      0.999982350647898
-                                                )
-         INS-143410_FOV_CLASS_SPEC            = 'ANGLES'
-         INS-143410_FOV_REF_VECTOR            = (
-                        1.000000       0.000000     0.000000
-                                                )
-         INS-143410_FOV_REF_ANGLE             = (   1.333000000000000 )
-         INS-143410_FOV_CROSS_ANGLE           = (   0.182246415475212 )
-         INS-143410_FOV_ANGLE_UNITS           = 'DEGREES'
-         
-         
-         INS-143420_FOV_FRAME                 = 'TGO_CASSIS_FSA'
-         INS-143420_FOV_SHAPE                 = 'RECTANGLE'
-         INS-143420_BORESIGHT                 = (
-                        0.000000       0.002112958427747     0.999997767700850
-                                                )
-         INS-143420_FOV_CLASS_SPEC            = 'ANGLES'
-         INS-143420_FOV_REF_VECTOR            = (
-                        1.000000       0.000000     0.000000
-                                                )
-         INS-143420_FOV_REF_ANGLE             = (   1.333000000000000 )
-         INS-143420_FOV_CROSS_ANGLE           = (   0.166625294148765 )
-         INS-143420_FOV_ANGLE_UNITS           = 'DEGREES'
-
-
-         INS-143430_FOV_FRAME                 = 'TGO_CASSIS_FSA'
-         INS-143430_FOV_SHAPE                 = 'RECTANGLE'
-         INS-143430_BORESIGHT                 = (
-                        0.000000      -0.001715359158770     0.999998528770396
-                                                )
-         INS-143430_FOV_CLASS_SPEC            = 'ANGLES'
-         INS-143430_FOV_REF_VECTOR            = (
-                        1.000000       0.000000     0.000000
-                                                )
-         INS-143430_FOV_REF_ANGLE             = (   1.333000000000000 )
-         INS-143430_FOV_CROSS_ANGLE           = (   0.166625294148765 )
-         INS-143430_FOV_ANGLE_UNITS           = 'DEGREES'
-         
-         
-         INS-143440_FOV_FRAME                 = 'TGO_CASSIS_FSA'
-         INS-143440_FOV_SHAPE                 = 'RECTANGLE'
-         INS-143440_BORESIGHT                 = (
+         INS-143421_FOV_FRAME                 = 'TGO_CASSIS_FSA'
+         INS-143421_FOV_SHAPE                 = 'RECTANGLE'
+         INS-143421_BORESIGHT                 = (
                         0.000000      -0.005589090900979     0.999984380909472
                                                 )
-         INS-143440_FOV_CLASS_SPEC            = 'ANGLES'
-         INS-143440_FOV_REF_VECTOR            = (
+         INS-143421_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-143421_FOV_REF_VECTOR            = (
                         1.000000       0.000000     0.000000
                                                 )
-         INS-143440_FOV_REF_ANGLE             = (   1.333000000000000 )
-         INS-143440_FOV_CROSS_ANGLE           = (   0.166625294148765 )
-         INS-143440_FOV_ANGLE_UNITS           = 'DEGREES'
+         INS-143421_FOV_REF_ANGLE             = (   0.666500000000000 )
+         INS-143421_FOV_CROSS_ANGLE           = (   0.091123207737606 )
+         INS-143421_FOV_ANGLE_UNITS           = 'DEGREES'
+         
+         
+         INS-143422_FOV_FRAME                 = 'TGO_CASSIS_FSA'
+         INS-143422_FOV_SHAPE                 = 'RECTANGLE'
+         INS-143422_BORESIGHT                 = (
+                        0.000000      -0.001715359158770     0.999998528770396
+                                                )
+         INS-143422_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-143422_FOV_REF_VECTOR            = (
+                        1.000000       0.000000     0.000000
+                                                )
+         INS-143422_FOV_REF_ANGLE             = (   0.666500000000000 )
+         INS-143422_FOV_CROSS_ANGLE           = (   0.083312647074382 )
+         INS-143422_FOV_ANGLE_UNITS           = 'DEGREES'
+
+
+         INS-143423_FOV_FRAME                 = 'TGO_CASSIS_FSA'
+         INS-143423_FOV_SHAPE                 = 'RECTANGLE'
+         INS-143423_BORESIGHT                 = (
+                        0.000000       0.002112958427747     0.999997767700850
+                                                )
+         INS-143423_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-143423_FOV_REF_VECTOR            = (
+                        1.000000       0.000000     0.000000
+                                                )
+         INS-143423_FOV_REF_ANGLE             = (   0.666500000000000 )
+         INS-143423_FOV_CROSS_ANGLE           = (   0.083312647074382 )
+         INS-143423_FOV_ANGLE_UNITS           = 'DEGREES'
+         
+         
+         INS-143424_FOV_FRAME                 = 'TGO_CASSIS_FSA'
+         INS-143424_FOV_SHAPE                 = 'RECTANGLE'
+         INS-143424_BORESIGHT                 = (
+                        0.000000      0.005941245046711      0.999982350647898
+                                                )
+         INS-143424_FOV_CLASS_SPEC            = 'ANGLES'
+         INS-143424_FOV_REF_VECTOR            = (
+                        1.000000       0.000000     0.000000
+                                                )
+         INS-143424_FOV_REF_ANGLE             = (   0.666500000000000 )
+         INS-143424_FOV_CROSS_ANGLE           = (   0.083312647074382 )
+         INS-143424_FOV_ANGLE_UNITS           = 'DEGREES'
 
   \begintext
 
 
 Optical Distortion
 --------------------------------------------------------
+ Rational correction model is described by following equation
 
-   As lens distortion model we use Rational function (RF) model [6]. RF model 
-   represent ideal (undistorted) image coordinates (x, y) as ratio of 2-d 
-   order polynomials of real (distorted) image coordinates (i, j).
+ ij_fp_chi = [ i_fp^2, i_fp*j_fp, j_fp^2, i_fp, j_fp, 1]
 
-       A1[1] * i^2 + A1[2] * i * j + A1[3] * j^2 + A1[4] * i + A1[5] * j + A1[6]
-   x = ------------------------------------------------------------------------
-       A3[1] * i^2 + A3[2] * i * j + A3[3] * j^2 + A3[4] * i + A3[5] * j + A3[6]
+          A_corr_1 * ij_fp_chi'
+ x_fp =  ----------------------
+          A_corr_3 * ij_fp_chi'
 
-       A2[1] * i^2 + A2[2] * i * j + A2[3] * j^2 + A2[4] * i + A2[5] * j + A2[6]
-   y = ------------------------------------------------------------------------
-       A3[1] * i^2 + A3[2] * i * j + A3[3] * j^2 + A3[4] * i + A3[5] * j + A3[6]
+          A_corr_2 * ij_fp_chi'
+ y_fp =  ----------------------
+          A_corr_3 * ij_fp_chi'
 
-   Note, that A3[6] element is always equal to 1 (to eliminate redundancy).
+ where (i_fp, j_fp) are distorted focal plane coordinates in millimeters
+       (x_fp, y_fp) are ideal focal plane coordinates in millimeters
+       A_corr_1, A_corr_2, A_corr_3 are 1x6 vectors, parameters of the rational correction model
 
-   \begindata
-   	
-    INS-143400_LENS_DISTRTION_A1 = ( -0.6106, -0.5445, -0.0015,  0.9998,  0.0002, 0.0000)
-    INS-143400_LENS_DISTRTION_A2 = ( -0.0049, -0.6070, -0.5433, -0.0005,  0.9943, 0.0005)
-    INS-143400_LENS_DISTRTION_A3 = ( -0.0496, -0.0257, -0.0703, -0.6092, -0.5101, 1.0000)
+ \begindata
+         INS-143400_OC_A1 = ( 0.00376130530948266,
+                             -0.0134154156065812,
+                             -1.86749521007237e-05,
+                              1.00021352681836,
+                             -0.000432362371703953,
+                             -0.000948065735350123 )
+         INS-143400_OC_A2 = ( 9.9842559363676e-05,
+                              0.00373543707958162,
+                             -0.0133299918873929,
+                             -0.000215311328389359,
+                              0.995296015537294,
+                             -0.0183542717710778 )
+         INS-143400_OC_A3 = ( -3.13320167004204e-05,
+                              -7.35655125749807e-06,
+                              -1.57664245066771e-05,
+                               0.00373549465439151,
+                              -0.0141671946930935,
+                               1.0 )
+ \begintext
 
-   \endtext
+Rational distortion model is described by following equation
 
+ xy_fp_chi = [ x_fp^2, x_fp*y_fp, y_fp^2, x_fp, y_fp, 1]
+
+          A_dist_1 * xy_fp_chi'
+ i_fp =  ----------------------
+          A_dist_3 * xy_fp_chi'
+
+          A_dist_2 * xy_fp_chi'
+ j_fp =  ----------------------
+          A_dist_3 * xy_fp_chi'
+
+ where (i_fp, j_fp) are distorted focal plane coordinates in millimeters
+       (x_fp, y_fp) are ideal focal plane coordinates in millimeters
+       A_dist_1, A_dist_2, A_dist_3 are 1x6 vectors, parameters of the rational distortion model
+
+ \begindata
+         INS-143400_OD_A1 = ( 0.00213658795560622,
+                             -0.00711785765064197,
+                              1.10355974742147e-05,
+                              0.573607182625377,
+                              0.000250884350194894,
+                              0.000550623913037132 )
+         INS-143400_OD_A2 = ( -5.69725741015406e-05,
+                               0.00215155905679149,
+                              -0.00716392991767185,
+                               0.000124152787728634,
+                               0.576459544392426,
+                               0.010576940564854 )
+         INS-143400_O_A3 = ( 1.78250771483506e-05,
+                             4.24592743471094e-06,
+                             9.51220699036653e-06,
+                             0.00215158425420738,
+                            -0.0066835595774833,
+                             0.573741540971609 )
+ \begintext
 
 Platform ID
 ---------------------------------------------------------------------------
@@ -456,11 +525,12 @@ Platform ID
 
   \begindata
 
-         INS-143410_PLATFORM_ID  = ( -143000 )
-         INS-143420_PLATFORM_ID  = ( -143000 )
-         INS-143430_PLATFORM_ID  = ( -143000 )
-         INS-143440_PLATFORM_ID  = ( -143000 )
+         INS-143421_PLATFORM_ID  = ( -143000 )
+         INS-143422_PLATFORM_ID  = ( -143000 )
+         INS-143423_PLATFORM_ID  = ( -143000 )
+         INS-143424_PLATFORM_ID  = ( -143000 )
 
   \begintext
+
 
 End of IK file.
